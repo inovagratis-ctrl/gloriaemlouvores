@@ -315,17 +315,15 @@ export default function Home() {
       {/* Footer */}
       <footer className="relative border-t border-[#E8E4E0] py-10 sm:py-12 bg-[#1a1f3a] overflow-hidden">
         {/* Silhueta de Jesus */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none">
-          <svg viewBox="0 0 200 300" className="h-[400px] w-auto" fill="currentColor">
-            {/* Silhueta de Jesus com braços levantados */}
-            <circle cx="100" cy="45" r="25" />
-            <path d="M75 70 Q60 90 55 130 Q50 170 55 200 L65 200 Q70 170 75 140 L80 140 L80 260 L60 260 L60 280 L140 280 L140 260 L120 260 L120 140 L125 140 L130 170 Q135 200 140 200 L150 200 Q155 170 150 130 Q145 90 130 70 Z" />
-            {/* Raios ao redor */}
-            <line x1="100" y1="5" x2="100" y2="15" strokeWidth="2" opacity="0.5" />
-            <line x1="60" y1="15" x2="65" y2="22" strokeWidth="2" opacity="0.5" />
-            <line x1="140" y1="15" x2="135" y2="22" strokeWidth="2" opacity="0.5" />
-            <line x1="45" y1="45" x2="53" y2="45" strokeWidth="2" opacity="0.5" />
-            <line x1="155" y1="45" x2="147" y2="45" strokeWidth="2" opacity="0.5" />
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <svg viewBox="0 0 100 140" className="h-[500px] w-auto text-white/[0.06]" fill="currentColor">
+            {/* Cabeça */}
+            <circle cx="50" cy="18" r="12" />
+            {/* Corpo com braços levantados */}
+            <path d="M38 30 C25 45 15 65 12 90 L18 90 C20 70 25 55 30 45 L35 45 L35 120 L28 120 L28 132 L72 132 L72 120 L65 120 L65 45 L70 45 C75 55 80 70 82 90 L88 90 C85 65 75 45 62 30 Z" />
+            {/* Braços */}
+            <path d="M38 30 C30 25 20 22 10 25 C15 30 25 38 38 42 Z" />
+            <path d="M62 30 C70 25 80 22 90 25 C85 30 75 38 62 42 Z" />
           </svg>
         </div>
         <div className="container max-w-6xl mx-auto px-4 relative z-10">
