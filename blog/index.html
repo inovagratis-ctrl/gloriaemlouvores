@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Glória em Louvores</title>
+  <meta name="description" content="📖 Blog do Glória em Louvores. Artigos sobre fé, louvor, oração e vida cristã. Reflexões bíblicas para fortalecer sua jornada.">
+  <meta name="keywords" content="blog gospel, artigos fé, reflexão bíblica, louvor, oração, vida cristã, glória em louvores">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://gloriaemlouvores.com.br/blog">
+  <meta name="theme-color" content="#C9A84C">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #FAFAF7; color: #2D2D2D; line-height: 1.6; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    nav { background: rgba(250, 250, 247, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid #E8E4D9; padding: 16px 0; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+    nav .container { display: flex; align-items: center; justify-content: space-between; }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { width: 40px; height: 40px; }
+    .logo-text { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: #8B6914; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a { color: #666; font-size: 0.9rem; font-weight: 500; }
+    .nav-links a:hover { color: #8B6914; }
+    .nav-cta { background: #8B6914; color: white !important; padding: 10px 24px; border-radius: 50px; font-weight: 600; }
+    .page-header { padding: 140px 0 80px; text-align: center; background: linear-gradient(180deg, #FFF9E6 0%, #FAFAF7 100%); }
+    .page-header h1 { font-size: clamp(2rem, 5vw, 3.5rem); color: #8B6914; margin-bottom: 16px; }
+    .page-header p { color: #666; max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
+    .blog-section { padding: 80px 0; }
+    .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 32px; }
+    .blog-card {
+      background: white; border: 1px solid #E8E4D9; border-radius: 20px;
+      overflow: hidden; transition: all 0.3s;
+    }
+    .blog-card:hover { border-color: #C9A84C; transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+    .blog-card .blog-img {
+      width: 100%; height: 200px; object-fit: cover;
+      background: linear-gradient(135deg, #FFF9E6 0%, #FFF3D1 100%);
+      display: flex; align-items: center; justify-content: center; font-size: 64px;
+    }
+    .blog-card .blog-content { padding: 24px; }
+    .blog-card .blog-tag {
+      display: inline-block; background: rgba(139, 105, 20, 0.1); color: #8B6914;
+      font-size: 0.75rem; font-weight: 600; padding: 4px 12px; border-radius: 50px; margin-bottom: 12px;
+    }
+    .blog-card h3 { color: #1a1a1a; font-size: 1.2rem; margin-bottom: 8px; line-height: 1.4; }
+    .blog-card p { color: #888; font-size: 0.9rem; margin-bottom: 16px; }
+    .blog-card .blog-date { color: #bbb; font-size: 0.8rem; }
+    .blog-card .blog-link { color: #8B6914; font-weight: 600; font-size: 0.9rem; }
+    .cta-section { padding: 80px 0; text-align: center; background: linear-gradient(180deg, #FFF9E6 0%, #FAFAF7 100%); }
+    .btn-youtube { display: inline-flex; align-items: center; gap: 12px; background: #FF0000; color: white; font-size: 1rem; font-weight: 700; padding: 16px 32px; border-radius: 50px; }
+    footer { border-top: 1px solid #E8E4D9; padding: 40px 0; text-align: center; color: #aaa; font-size: 0.8rem; background: #F5F3EE; }
+    footer a { color: #8B6914; }
+    @media (max-width: 768px) { .blog-grid { grid-template-columns: 1fr; } .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">
+        <svg class="logo-icon" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="28" stroke="#8B6914" stroke-width="2" fill="none"/><path d="M30 12 L30 48" stroke="#8B6914" stroke-width="3" stroke-linecap="round"/><path d="M18 28 L42 28" stroke="#8B6914" stroke-width="3" stroke-linecap="round"/></svg>
+        <span class="logo-text">Glória em Louvores</span>
+      </a>
+      <div class="nav-links">
+        <a href="/categorias">Categorias</a>
+        <a href="/blog">Blog</a>
+        <a href="https://www.youtube.com/@gloriaemlouvores" target="_blank" class="nav-cta">Inscreva-se</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>📖 Blog</h1>
+      <p>Artigos sobre fé, louvor, oração e vida cristã. Reflexões para fortalecer sua jornada.</p>
+    </div>
+  </section>
+
+  <section class="blog-section">
+    <div class="container">
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-img">🔥</div>
+          <div class="blog-content">
+            <span class="blog-tag">Adoração</span>
+            <h3>O Poder do Louvor na Hora da Batalha</h3>
+            <p>Quando Jó cantou no meio do sofrimento, algo se quebrou nos céus. Descubra por que o louvor é sua arma mais poderosa.</p>
+            <span class="blog-date">21 de julho de 2026</span>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-img">🙏</div>
+          <div class="blog-content">
+            <span class="blog-tag">Oração</span>
+            <h3>Como Orar com Louvor e Mudar Situações</h3>
+            <p>A combinação de oração e louvor é devastadora. Veja como usar essa estratégia espiritual na sua vida.</p>
+            <span class="blog-date">18 de julho de 2026</span>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-img">🕊️</div>
+          <div class="blog-content">
+            <span class="blog-tag">Paz</span>
+            <h3>7 Louvores Que Trazem Paz Para o Coração</h3>
+            <p>A ansiedade não convive com a presença de Deus. Conheça os louvores que trazem paz genuína.</p>
+            <span class="blog-date">15 de julho de 2026</span>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-img">⭐</div>
+          <div class="blog-content">
+            <span class="blog-tag">Fé</span>
+            <h3>Fé que Move Montanhas: Louvores Para Crer</h3>
+            <p>Quando tudo parece impossível, o louvor fortalece sua fé. Músicas que te lembram do poder de Deus.</p>
+            <span class="blog-date">12 de julho de 2026</span>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-img">🛡️</div>
+          <div class="blog-content">
+            <span class="blog-tag">Proteção</span>
+            <h3>Cobertura Divina: Como Proteger Sua Família com Louvor</h3>
+            <p>Seu lar precisa de proteção espiritual. Veja como o louvor cria um escudo sobre sua família.</p>
+            <span class="blog-date">9 de julho de 2026</span>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-img">🌙</div>
+          <div class="blog-content">
+            <span class="blog-tag">Descanso</span>
+            <h3>Durma em Paz: Louvores Para uma Noite Tranquila</h3>
+            <p>Insônia e ansiedade noturna? O louvor é o remédio que Deus forneceu. Descubra os melhores louvores para dormir.</p>
+            <span class="blog-date">6 de julho de 2026</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2 style="color:#8B6914;margin-bottom:16px;">Mais conteúdo no canal</h2>
+      <p style="color:#666;margin-bottom:32px;">Inscreva-se para receber novos louvores e artigos toda semana.</p>
+      <a href="https://www.youtube.com/@gloriaemlouvores?sub_confirmation=1" target="_blank" class="btn-youtube">▶ Inscreva-se no Canal</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 <a href="https://www.youtube.com/@gloriaemlouvores" target="_blank">Glória em Louvores</a>. Todos os direitos reservados.</p>
+  </footer>
+</body>
+</html>
