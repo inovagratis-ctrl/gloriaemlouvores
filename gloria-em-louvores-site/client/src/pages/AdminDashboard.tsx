@@ -45,7 +45,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       addBlogPost(postForm);
       setShowNewPost(false);
     }
-    setPostForm({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', date: new Date().toLocaleDateString('pt-BR') });
+    setPostForm({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', image: '', date: new Date().toLocaleDateString('pt-BR') });
   };
 
   const startEditVideo = (video: Video) => {
@@ -166,7 +166,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
           <TabsContent value="blog">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-[#1a1f3a]">Blog</h2>
-              <Button onClick={() => { setShowNewPost(true); setEditingPost(null); setPostForm({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', date: new Date().toLocaleDateString('pt-BR') }); }} className="bg-[#D4AF37] hover:bg-[#B8942E] text-white gap-2">
+              <Button onClick={() => { setShowNewPost(true); setEditingPost(null); setPostForm({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', image: '', date: new Date().toLocaleDateString('pt-BR') }); }} className="bg-[#D4AF37] hover:bg-[#B8942E] text-white gap-2">
                 <Plus className="w-4 h-4" /> Novo Artigo
               </Button>
             </div>

@@ -163,7 +163,7 @@ export default function Home() {
               <span className="text-[#FF0000] text-sm font-semibold">YouTube Shorts</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-4">Momentos de <span className="text-[#FF0000]">fé</span></h2>
-            <p className="text-gray-500 max-w-xl mx-auto">Clipes curtos que tocam o coração — perfeitos para compartilhar aPalavra</p>
+            <p className="text-gray-500 max-w-xl mx-auto">Clipes curtos que tocam o coração — perfeitos para compartilhar a Palavra</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
@@ -242,7 +242,13 @@ export default function Home() {
               {blogPosts.slice(0, 3).map((post) => (
                 <a key={post.id} href={`/blog/${post.id}`}>
                   <Card className="border border-[#E8E4E0] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white cursor-pointer h-full group">
-                    <div className="h-40 sm:h-48 bg-gradient-to-br from-[#F4E4C1] to-[#F9F7F4] flex items-center justify-center text-5xl sm:text-6xl group-hover:scale-110 transition-transform duration-500">{post.icon}</div>
+                    {post.image ? (
+                      <div className="h-40 sm:h-48 overflow-hidden">
+                        <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      </div>
+                    ) : (
+                      <div className="h-40 sm:h-48 bg-gradient-to-br from-[#F4E4C1] to-[#F9F7F4] flex items-center justify-center text-5xl sm:text-6xl group-hover:scale-110 transition-transform duration-500">{post.icon}</div>
+                    )}
                     <CardContent className="p-5 sm:p-6">
                       <div className="flex items-center gap-2 mb-3">
                         <span className="inline-block bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-semibold px-3 py-1 rounded-full">{post.tag}</span>
@@ -283,25 +289,25 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 sm:py-24 bg-gradient-to-br from-[#FF0000] via-[#CC0000] to-[#990000] relative overflow-hidden">
+      <section className="py-16 sm:py-24 bg-gradient-to-br from-[#1a1f3a] via-[#1a1f3a] to-[#0f0f0f] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full blur-[100px]" />
-          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full blur-[80px]" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#D4AF37] rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-[#D4AF37] rounded-full blur-[80px]" />
         </div>
         <div className="container max-w-3xl mx-auto px-4 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
-            <Youtube className="w-4 h-4 text-white" />
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
+            <Youtube className="w-4 h-4 text-[#D4AF37]" />
             <span className="text-white text-sm font-medium">+1.400 inscritos</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">Não perca nenhum louvor</h2>
-          <p className="text-white/80 text-base sm:text-lg mb-10 max-w-xl mx-auto">Inscreva-se no canal e ative o sininho para receber notificações sempre que um novo louvor for publicado.</p>
+          <p className="text-white/70 text-base sm:text-lg mb-10 max-w-xl mx-auto">Inscreva-se no canal e ative o sininho para receber notificações sempre que um novo louvor for publicado.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-white text-[#FF0000] hover:bg-gray-100 px-8 py-6 text-lg rounded-full shadow-xl font-bold gap-2">
+            <Button asChild size="lg" className="bg-[#D4AF37] hover:bg-[#B8942E] text-white px-8 py-6 text-lg rounded-full shadow-xl font-bold gap-2">
               <a href="https://www.youtube.com/@gloriaemlouvores?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
                 <Youtube className="w-6 h-6" /> Inscreva-se Agora
               </a>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-2 border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-full gap-2">
+            <Button asChild size="lg" variant="outline" className="border-2 border-white/20 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-full gap-2">
               <a href="https://www.youtube.com/@gloriaemlouvores/videos" target="_blank" rel="noopener noreferrer">
                 Assistir Vídeos
               </a>

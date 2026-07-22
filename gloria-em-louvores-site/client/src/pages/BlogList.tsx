@@ -33,9 +33,15 @@ export default function BlogList() {
             {blogPosts.map((post) => (
               <Link key={post.id} href={`/blog/${post.id}`}>
                 <Card className="border border-[#E8E4E0] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white cursor-pointer h-full">
-                  <div className="h-40 sm:h-48 bg-gradient-to-br from-[#F4E4C1] to-[#F9F7F4] flex items-center justify-center text-5xl sm:text-6xl">
-                    {post.icon}
-                  </div>
+                  {post.image ? (
+                    <div className="h-40 sm:h-48 overflow-hidden">
+                      <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="h-40 sm:h-48 bg-gradient-to-br from-[#F4E4C1] to-[#F9F7F4] flex items-center justify-center text-5xl sm:text-6xl">
+                      {post.icon}
+                    </div>
+                  )}
                   <CardContent className="p-5 sm:p-6">
                     <div className="flex items-center gap-2 mb-3">
                       <span className="inline-block bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-semibold px-3 py-1 rounded-full">

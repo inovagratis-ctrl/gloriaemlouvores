@@ -5,6 +5,7 @@ import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
 import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
+import ContactForm from "@/pages/Contact";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { DataProvider } from "./contexts/DataContext";
@@ -31,6 +32,7 @@ function Router() {
       <Route path="/admin" component={AdminPage} />
       <Route path="/blog" component={BlogList} />
       <Route path="/blog/:id" component={BlogPost} />
+      <Route path="/contato" component={ContactForm} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

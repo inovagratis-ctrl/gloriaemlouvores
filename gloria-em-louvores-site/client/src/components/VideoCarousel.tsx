@@ -55,7 +55,7 @@ export default function VideoCarousel({ videos }: VideoCarouselProps) {
       </div>
 
       {/* Navigation Arrows */}
-      {videos.length > 3 && (
+      {videos.length > 1 && (
         <>
           <Button
             variant="outline"
