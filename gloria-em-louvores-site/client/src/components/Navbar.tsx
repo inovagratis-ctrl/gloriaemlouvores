@@ -37,7 +37,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <img src="/images/logotipo.png" alt="Glória em Louvores" className={`h-14 sm:h-16 md:h-18 transition-all duration-300 rounded-lg ${scrolled ? "" : "drop-shadow-2xl"}`} style={{ mixBlendMode: "lighten" }} />
+              <img src="/images/logotipo.png" alt="Glória em Louvores" className={`h-14 sm:h-16 md:h-18 transition-all duration-300 rounded-lg ${scrolled ? "" : "drop-shadow-2xl"}`} style={{ mixBlendMode: "screen" }} />
             </Link>
 
             {/* Desktop Nav */}
@@ -102,7 +102,7 @@ export default function Navbar() {
         }`}>
           <div className="p-6">
             <div className="flex items-center justify-between mb-8">
-              <img src="/images/logotipo.png" alt="Glória em Louvores" className="h-14 object-contain" style={{ mixBlendMode: "lighten" }} />
+              <img src="/images/logotipo.png" alt="Glória em Louvores" className="h-14 object-contain" style={{ mixBlendMode: "screen" }} />
               <button onClick={() => setMobileOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100">
                 <X className="w-4 h-4" />
               </button>

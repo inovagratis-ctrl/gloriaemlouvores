@@ -315,7 +315,7 @@ export default function Home() {
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
-              <img src="/images/logotipo.png" alt="Glória em Louvores" className="h-20 object-contain mb-4" style={{ mixBlendMode: "lighten" }} />
+              <img src="/images/logotipo.png" alt="Glória em Louvores" className="h-20 object-contain mb-4" style={{ mixBlendMode: "screen" }} />
               <p className="text-gray-500 text-sm">Levando a presença de Deus através da música. Uma família de fé que cresce a cada dia.</p>
             </div>
             <div>
