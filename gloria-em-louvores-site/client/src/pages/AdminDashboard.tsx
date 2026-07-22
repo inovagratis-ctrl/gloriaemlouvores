@@ -6,21 +6,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Trash2, Edit, Save, X, Mail, Eye, Music, FileText } from 'lucide-react';
+import { Plus, Trash2, Edit, Save, X, Mail, Eye, Music, FileText, Star, ArrowLeft } from 'lucide-react';
+import { Link } from 'wouter';
 
 interface AdminDashboardProps {
   onLogout: () => void;
 }
 
 export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
-  const { videos, blogPosts, prayerRequests, addVideo, updateVideo, deleteVideo, addBlogPost, updateBlogPost, deleteBlogPost, markAsRead, deletePrayerRequest } = useData();
+  const { videos, blogPosts, prayerRequests, addVideo, updateVideo, deleteVideo, toggleFeatured, addBlogPost, updateBlogPost, deleteBlogPost, markAsRead, deletePrayerRequest } = useData();
 
   const [editingVideo, setEditingVideo] = useState<Video | null>(null);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [showNewVideo, setShowNewVideo] = useState(false);
   const [showNewPost, setShowNewPost] = useState(false);
 
-  const [videoForm, setVideoForm] = useState({ youtubeId: '', title: '', views: '', category: 'adoracao' });
+  const [videoForm, setVideoForm] = useState({ youtubeId: '', title: '', views: '', category: 'adoracao', featured: false, date: new Date().toISOString().split('T')[0] });
   const [postForm, setPostForm] = useState({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', date: new Date().toLocaleDateString('pt-BR') });
 
   const unreadCount = prayerRequests.filter(r => !r.read).length;
@@ -33,7 +34,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       addVideo(videoForm);
       setShowNewVideo(false);
     }
-    setVideoForm({ youtubeId: '', title: '', views: '', category: 'adoracao' });
+    setVideoForm({ youtubeId: '', title: '', views: '', category: 'adoracao', featured: false, date: new Date().toISOString().split('T')[0] });
   };
 
   const handleSavePost = () => {
@@ -49,7 +50,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
 
   const startEditVideo = (video: Video) => {
     setEditingVideo(video);
-    setVideoForm({ youtubeId: video.youtubeId, title: video.title, views: video.views, category: video.category });
+    setVideoForm({ youtubeId: video.youtubeId, title: video.title, views: video.views, category: video.category, featured: video.featured, date: video.date });
   };
 
   const startEditPost = (post: BlogPost) => {
@@ -62,11 +63,10 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       <header className="bg-white border-b border-[#E8E4E0] sticky top-0 z-50">
         <div className="container max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <Link href="/"><Button variant="ghost" size="sm"><ArrowLeft className="w-4 h-4" /></Button></Link>
             <Music className="w-6 h-6 text-[#D4AF37]" />
             <h1 className="text-xl font-bold text-[#1a1f3a]">Painel Admin</h1>
-            {unreadCount > 0 && (
-              <span className="bg-[#FF0000] text-white text-xs px-2 py-1 rounded-full">{unreadCount} novo(s)</span>
-            )}
+            {unreadCount > 0 && <span className="bg-[#FF0000] text-white text-xs px-2 py-1 rounded-full">{unreadCount} novo(s)</span>}
           </div>
           <Button variant="outline" onClick={onLogout} size="sm">Sair</Button>
         </div>
@@ -75,8 +75,8 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       <main className="container max-w-6xl mx-auto px-4 py-8">
         <Tabs defaultValue="videos">
           <TabsList className="mb-8">
-            <TabsTrigger value="videos" className="gap-2"><Music className="w-4 h-4" /> Vídeos</TabsTrigger>
-            <TabsTrigger value="blog" className="gap-2"><FileText className="w-4 h-4" /> Blog</TabsTrigger>
+            <TabsTrigger value="videos" className="gap-2"><Music className="w-4 h-4" /> Vídeos ({videos.length})</TabsTrigger>
+            <TabsTrigger value="blog" className="gap-2"><FileText className="w-4 h-4" /> Blog ({blogPosts.length})</TabsTrigger>
             <TabsTrigger value="requests" className="gap-2"><Mail className="w-4 h-4" /> Pedidos {unreadCount > 0 && `(${unreadCount})`}</TabsTrigger>
           </TabsList>
 
@@ -84,16 +84,14 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
           <TabsContent value="videos">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-[#1a1f3a]">Vídeos</h2>
-              <Button onClick={() => { setShowNewVideo(true); setEditingVideo(null); setVideoForm({ youtubeId: '', title: '', views: '', category: 'adoracao' }); }} className="bg-[#D4AF37] hover:bg-[#B8942E] text-white gap-2">
+              <Button onClick={() => { setShowNewVideo(true); setEditingVideo(null); setVideoForm({ youtubeId: '', title: '', views: '', category: 'adoracao', featured: false, date: new Date().toISOString().split('T')[0] }); }} className="bg-[#D4AF37] hover:bg-[#B8942E] text-white gap-2">
                 <Plus className="w-4 h-4" /> Novo Vídeo
               </Button>
             </div>
 
             {(showNewVideo || editingVideo) && (
               <Card className="mb-6">
-                <CardHeader>
-                  <CardTitle>{editingVideo ? 'Editar Vídeo' : 'Novo Vídeo'}</CardTitle>
-                </CardHeader>
+                <CardHeader><CardTitle>{editingVideo ? 'Editar Vídeo' : 'Novo Vídeo'}</CardTitle></CardHeader>
                 <CardContent className="space-y-4">
                   <div>
                     <Label>ID do YouTube</Label>
@@ -120,6 +118,19 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                       </select>
                     </div>
                   </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Data de Publicação</Label>
+                      <Input type="date" value={videoForm.date} onChange={e => setVideoForm({ ...videoForm, date: e.target.value })} />
+                    </div>
+                    <div className="flex items-end">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={videoForm.featured} onChange={e => setVideoForm({ ...videoForm, featured: e.target.checked })} className="w-4 h-4 rounded" />
+                        <Star className="w-4 h-4 text-[#D4AF37]" />
+                        <span className="text-sm font-medium">Destaque</span>
+                      </label>
+                    </div>
+                  </div>
                   <div className="flex gap-2">
                     <Button onClick={handleSaveVideo} className="bg-green-600 hover:bg-green-700 text-white gap-2"><Save className="w-4 h-4" /> Salvar</Button>
                     <Button variant="outline" onClick={() => { setShowNewVideo(false); setEditingVideo(null); }} className="gap-2"><X className="w-4 h-4" /> Cancelar</Button>
@@ -130,14 +141,18 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
 
             <div className="space-y-4">
               {videos.map(video => (
-                <Card key={video.id}>
+                <Card key={video.id} className={video.featured ? 'border-[#D4AF37] bg-[#D4AF37]/5' : ''}>
                   <CardContent className="p-4 flex items-center gap-4">
-                    <img src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`} alt="" className="w-32 h-20 object-cover rounded" />
+                    <img src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`} alt="" className="w-32 h-20 object-cover rounded-lg" />
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-[#1a1f3a] truncate">{video.title}</h3>
-                      <p className="text-sm text-gray-500">{video.views} • {video.category}</p>
+                      <div className="flex items-center gap-2">
+                        {video.featured && <Star className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />}
+                        <h3 className="font-semibold text-[#1a1f3a] truncate">{video.title}</h3>
+                      </div>
+                      <p className="text-sm text-gray-500">{video.views} • {video.category} • {video.date}</p>
                     </div>
                     <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => toggleFeatured(video.id)} className={video.featured ? 'text-[#D4AF37] border-[#D4AF37]' : ''}><Star className={`w-4 h-4 ${video.featured ? 'fill-[#D4AF37]' : ''}`} /></Button>
                       <Button variant="outline" size="sm" onClick={() => startEditVideo(video)}><Edit className="w-4 h-4" /></Button>
                       <Button variant="outline" size="sm" onClick={() => deleteVideo(video.id)} className="text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></Button>
                     </div>
@@ -158,32 +173,15 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
 
             {(showNewPost || editingPost) && (
               <Card className="mb-6">
-                <CardHeader>
-                  <CardTitle>{editingPost ? 'Editar Artigo' : 'Novo Artigo'}</CardTitle>
-                </CardHeader>
+                <CardHeader><CardTitle>{editingPost ? 'Editar Artigo' : 'Novo Artigo'}</CardTitle></CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label>Ícone</Label>
-                      <Input placeholder="Ex: 🔥" value={postForm.icon} onChange={e => setPostForm({ ...postForm, icon: e.target.value })} />
-                    </div>
-                    <div>
-                      <Label>Categoria</Label>
-                      <Input placeholder="Ex: Adoração" value={postForm.tag} onChange={e => setPostForm({ ...postForm, tag: e.target.value })} />
-                    </div>
+                    <div><Label>Ícone</Label><Input placeholder="Ex: 🔥" value={postForm.icon} onChange={e => setPostForm({ ...postForm, icon: e.target.value })} /></div>
+                    <div><Label>Categoria</Label><Input placeholder="Ex: Adoração" value={postForm.tag} onChange={e => setPostForm({ ...postForm, tag: e.target.value })} /></div>
                   </div>
-                  <div>
-                    <Label>Título</Label>
-                    <Input placeholder="Título do artigo" value={postForm.title} onChange={e => setPostForm({ ...postForm, title: e.target.value })} />
-                  </div>
-                  <div>
-                    <Label>Resumo</Label>
-                    <Input placeholder="Breve descrição" value={postForm.desc} onChange={e => setPostForm({ ...postForm, desc: e.target.value })} />
-                  </div>
-                  <div>
-                    <Label>Conteúdo</Label>
-                    <Textarea placeholder="Conteúdo completo do artigo..." rows={6} value={postForm.content} onChange={e => setPostForm({ ...postForm, content: e.target.value })} />
-                  </div>
+                  <div><Label>Título</Label><Input placeholder="Título do artigo" value={postForm.title} onChange={e => setPostForm({ ...postForm, title: e.target.value })} /></div>
+                  <div><Label>Resumo</Label><Input placeholder="Breve descrição" value={postForm.desc} onChange={e => setPostForm({ ...postForm, desc: e.target.value })} /></div>
+                  <div><Label>Conteúdo</Label><Textarea placeholder="Conteúdo completo do artigo..." rows={6} value={postForm.content} onChange={e => setPostForm({ ...postForm, content: e.target.value })} /></div>
                   <div className="flex gap-2">
                     <Button onClick={handleSavePost} className="bg-green-600 hover:bg-green-700 text-white gap-2"><Save className="w-4 h-4" /> Salvar</Button>
                     <Button variant="outline" onClick={() => { setShowNewPost(false); setEditingPost(null); }} className="gap-2"><X className="w-4 h-4" /> Cancelar</Button>

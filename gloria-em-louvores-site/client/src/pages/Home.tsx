@@ -1,7 +1,9 @@
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Play, Youtube, BookOpen, Heart, Shield, Moon, Sun, Music, Star, Send, MessageCircle } from "lucide-react";
-import { useData } from "@/contexts/DataContext";
+import { Youtube, BookOpen, Heart, Shield, Moon, Sun, Music, Star, Send, Shuffle, Clock, Award } from "lucide-react";
+import { useData, shuffleArray } from "@/contexts/DataContext";
+import Navbar from "@/components/Navbar";
 
 const categories = [
   { icon: <Sun className="w-8 h-8" />, title: "Louvores de Adoração", desc: "Momentos intensos de presença de Deus", color: "from-amber-50 to-orange-50" },
@@ -12,63 +14,72 @@ const categories = [
   { icon: <Moon className="w-8 h-8" />, title: "Louvores Para Dormir", desc: "Descanse na presença do Senhor", color: "from-indigo-50 to-blue-50" },
 ];
 
+function VideoCard({ video }: { video: any }) {
+  return (
+    <Card className="border-0 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      <div className="aspect-video">
+        <iframe
+          src={`https://www.youtube.com/embed/${video.youtubeId}`}
+          title={video.title}
+          className="w-full h-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          loading="lazy"
+        />
+      </div>
+      <CardContent className="p-5 sm:p-6">
+        <h3 className="text-base sm:text-lg font-bold text-[#1a1f3a] mb-2 line-clamp-2">{video.title}</h3>
+        <p className="text-gray-500 text-xs sm:text-sm">{video.views}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function Home() {
   const { videos, blogPosts } = useData();
+  const [randomVideos, setRandomVideos] = useState(() => shuffleArray(videos).slice(0, 3));
+
+  const featuredVideos = useMemo(() => videos.filter(v => v.featured), [videos]);
+  const recentVideos = useMemo(() => [...videos].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3), [videos]);
+
+  const refreshRandom = () => setRandomVideos(shuffleArray(videos).slice(0, 3));
 
   return (
     <div className="min-h-screen bg-background">
+      <Navbar />
       {/* Hero */}
       <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#1a1f3a] via-[#0f0f0f] to-[#1a1f3a]">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-[#D4AF37]/8 rounded-full blur-[120px]" />
           <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#D4AF37]/5 rounded-full blur-[100px]" />
         </div>
-
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-6 py-2.5 mb-8 backdrop-blur-sm">
             <Music className="w-4 h-4 text-[#D4AF37]" />
             <span className="text-white/80 text-sm font-medium">+1.400 irmãos em Cristo</span>
           </div>
-
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-6 leading-tight">
-            A Glória de Deus
-            <span className="block text-[#D4AF37] mt-2">Desce Sobre Você</span>
+            A Glória de Deus<span className="block text-[#D4AF37] mt-2">Desce Sobre Você</span>
           </h1>
-
           <p className="text-base sm:text-lg md:text-xl text-white/70 mb-10 max-w-3xl mx-auto leading-relaxed">
             Louvores gospel poderosos que <span className="text-white font-medium">expulsam todo mal</span> e trazem a paz de Deus para o seu coração.
             <br className="hidden md:block" />
             <span className="text-white/50 text-sm md:text-base">Católicos, evangélicos, todas as denominações — todos são bem-vindos na presença do Senhor.</span>
           </p>
-
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="bg-[#FF0000] hover:bg-[#CC0000] text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-[#FF0000]/25">
               <a href="https://www.youtube.com/@gloriaemlouvores?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
-                <Youtube className="w-6 h-6 mr-3" />
-                Assistir no YouTube
+                <Youtube className="w-6 h-6 mr-3" /> Assistir no YouTube
               </a>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-full">
-              <a href="#contato">
-                <Send className="w-5 h-5 mr-3" />
-                Pedir Oração
-              </a>
+              <a href="#contato"><Send className="w-5 h-5 mr-3" /> Pedir Oração</a>
             </Button>
           </div>
-
           <div className="flex justify-center gap-8 sm:gap-12 mt-16">
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">107+</div>
-              <div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Vídeos</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">1.4K+</div>
-              <div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Inscritos</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">6.8K</div>
-              <div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Views no Top</div>
-            </div>
+            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">107+</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Vídeos</div></div>
+            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">1.4K+</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Inscritos</div></div>
+            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">6.8K</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Views no Top</div></div>
           </div>
         </div>
       </section>
@@ -88,14 +99,9 @@ export default function Home() {
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-12 sm:mb-16">
             <p className="text-[#D4AF37] text-sm font-semibold uppercase tracking-[3px] mb-4">O Canal</p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6">
-              Adoração que <span className="text-[#D4AF37]">transforma</span> vidas
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">
-              O Glória em Louvores é um canal dedicado a levar a presença de Deus através da música. Uma família de fé que cresce a cada dia.
-            </p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6">Adoração que <span className="text-[#D4AF37]">transforma</span> vidas</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">O Glória em Louvores é um canal dedicado a levar a presença de Deus através da música. Uma família de fé que cresce a cada dia.</p>
           </div>
-
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
               { icon: "🎶", title: "Louvores Poderosos", desc: "Mais de 100 louvores gospel selecionados para adorar e glorificar a Deus." },
@@ -115,17 +121,61 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories */}
+      {/* VÍDEOS EM DESTAQUE */}
+      {featuredVideos.length > 0 && (
+        <section className="py-16 sm:py-24 bg-[#F9F7F4]">
+          <div className="container max-w-6xl mx-auto px-4">
+            <div className="flex items-center gap-3 mb-8">
+              <Award className="w-6 h-6 text-[#D4AF37]" />
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#0f0f0f]">Destaques</h2>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {featuredVideos.map(video => <VideoCard key={video.id} video={video} />)}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* VÍDEOS RECENTES */}
+      {recentVideos.length > 0 && (
+        <section className="py-16 sm:py-24 bg-white">
+          <div className="container max-w-6xl mx-auto px-4">
+            <div className="flex items-center gap-3 mb-8">
+              <Clock className="w-6 h-6 text-[#D4AF37]" />
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#0f0f0f]">Recentes</h2>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {recentVideos.map(video => <VideoCard key={video.id} video={video} />)}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* VÍDEOS ALEATÓRIOS */}
       <section className="py-16 sm:py-24 bg-[#F9F7F4]">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <Shuffle className="w-6 h-6 text-[#D4AF37]" />
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#0f0f0f]">Descubra</h2>
+            </div>
+            <Button variant="outline" size="sm" onClick={refreshRandom} className="gap-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white">
+              <Shuffle className="w-4 h-4" /> Trocar
+            </Button>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {randomVideos.map(video => <VideoCard key={video.id} video={video} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* Categories */}
+      <section className="py-16 sm:py-24 bg-white">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-12 sm:mb-16">
             <p className="text-[#D4AF37] text-sm font-semibold uppercase tracking-[3px] mb-4">Explore</p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6">
-              Escolha o seu <span className="text-[#D4AF37]">momento</span>
-            </h2>
-            <p className="text-gray-500 max-w-xl mx-auto">Louvores para cada fase da sua vida</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6">Escolha o seu <span className="text-[#D4AF37]">momento</span></h2>
           </div>
-
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {categories.map((cat, i) => (
               <Card key={i} className={`border border-[#E8E4E0] bg-gradient-to-br ${cat.color} hover:border-[#D4AF37] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer`}>
@@ -141,64 +191,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Videos */}
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12 sm:mb-16">
-            <p className="text-[#D4AF37] text-sm font-semibold uppercase tracking-[3px] mb-4">Destaque</p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6">
-              Vídeos que <span className="text-[#D4AF37]">tocam</span> a alma
-            </h2>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {videos.map((video) => (
-              <Card key={video.id} className="border-0 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <div className="aspect-video">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${video.youtubeId}`}
-                    title={video.title}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    loading="lazy"
-                  />
-                </div>
-                <CardContent className="p-5 sm:p-6">
-                  <h3 className="text-base sm:text-lg font-bold text-[#1a1f3a] mb-2 line-clamp-2">{video.title}</h3>
-                  <p className="text-gray-500 text-xs sm:text-sm">{video.views}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Blog */}
       {blogPosts.length > 0 && (
         <section className="py-16 sm:py-24 bg-[#F9F7F4]">
           <div className="container max-w-6xl mx-auto px-4">
             <div className="text-center mb-12 sm:mb-16">
               <p className="text-[#D4AF37] text-sm font-semibold uppercase tracking-[3px] mb-4">Blog</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6">
-                Reflexões de <span className="text-[#D4AF37]">fé</span>
-              </h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6">Reflexões de <span className="text-[#D4AF37]">fé</span></h2>
             </div>
-
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {blogPosts.slice(0, 3).map((post) => (
-                <Card key={post.id} className="border border-[#E8E4E0] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white">
-                  <div className="h-40 sm:h-48 bg-gradient-to-br from-[#F4E4C1] to-[#F9F7F4] flex items-center justify-center text-5xl sm:text-6xl">
-                    {post.icon}
-                  </div>
-                  <CardContent className="p-5 sm:p-6">
-                    <span className="inline-block bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-semibold px-3 py-1 rounded-full mb-3">
-                      {post.tag}
-                    </span>
-                    <h3 className="text-lg sm:text-xl font-bold text-[#0f0f0f] mb-2 line-clamp-2">{post.title}</h3>
-                    <p className="text-gray-600 text-sm line-clamp-2">{post.desc}</p>
-                  </CardContent>
-                </Card>
+                <a key={post.id} href={`/blog/${post.id}`}>
+                  <Card className="border border-[#E8E4E0] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white cursor-pointer h-full">
+                    <div className="h-40 sm:h-48 bg-gradient-to-br from-[#F4E4C1] to-[#F9F7F4] flex items-center justify-center text-5xl sm:text-6xl">{post.icon}</div>
+                    <CardContent className="p-5 sm:p-6">
+                      <span className="inline-block bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-semibold px-3 py-1 rounded-full mb-3">{post.tag}</span>
+                      <h3 className="text-lg sm:text-xl font-bold text-[#0f0f0f] mb-2 line-clamp-2">{post.title}</h3>
+                      <p className="text-gray-600 text-sm line-clamp-2">{post.desc}</p>
+                    </CardContent>
+                  </Card>
+                </a>
               ))}
             </div>
           </div>
@@ -209,12 +221,9 @@ export default function Home() {
       <section className="py-16 sm:py-24 bg-gradient-to-br from-[#1a1f3a] to-[#0f0f0f]">
         <div className="container max-w-4xl mx-auto px-4 text-center">
           <div className="text-5xl sm:text-6xl mb-8">✝️</div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6">
-            Uma Família em <span className="text-[#D4AF37]">Cristo</span>
-          </h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6">Uma Família em <span className="text-[#D4AF37]">Cristo</span></h2>
           <p className="text-white/70 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
-            Seja você católico, evangélico, presbiteriano, batista, assembleiano, metodista ou de qualquer outra denominação — aqui todos são bem-vindos.
-            Pois em Cristo não há divisão, mas <span className="text-white font-medium">unidade na fé</span>.
+            Seja você católico, evangélico, presbiteriano, batista, assembleiano, metodista ou de qualquer outra denominação — aqui todos são bem-vindos. Pois em Cristo não há divisão, mas <span className="text-white font-medium">unidade na fé</span>.
           </p>
           <blockquote className="text-white/50 italic text-sm sm:text-base border-l-2 border-[#D4AF37] pl-4 max-w-xl mx-auto">
             "Há um só corpo e um só Espírito, como também fuiis chamados em uma só esperança da vossa vocação."
@@ -226,16 +235,11 @@ export default function Home() {
       {/* CTA */}
       <section className="py-16 sm:py-24 bg-white">
         <div className="container max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#D4AF37] mb-6">
-            Não perca nenhum louvor
-          </h2>
-          <p className="text-gray-600 text-base sm:text-lg mb-10">
-            Inscreva-se no canal e ative o sininho para receber notificações sempre que um novo louvor for publicado.
-          </p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#D4AF37] mb-6">Não perca nenhum louvor</h2>
+          <p className="text-gray-600 text-base sm:text-lg mb-10">Inscreva-se no canal e ative o sininho para receber notificações sempre que um novo louvor for publicado.</p>
           <Button asChild size="lg" className="bg-[#FF0000] hover:bg-[#CC0000] text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-[#FF0000]/25">
             <a href="https://www.youtube.com/@gloriaemlouvores?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
-              <Youtube className="w-6 h-6 mr-3" />
-              Inscreva-se no Canal
+              <Youtube className="w-6 h-6 mr-3" /> Inscreva-se no Canal
             </a>
           </Button>
         </div>
@@ -246,13 +250,8 @@ export default function Home() {
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <Music className="w-6 h-6 text-[#D4AF37]" />
-                <span className="text-lg font-bold text-[#1a1f3a]">Glória em Louvores</span>
-              </div>
-              <p className="text-gray-500 text-sm">
-                Levando a presença de Deus através da música. Uma família de fé que cresce a cada dia.
-              </p>
+              <div className="flex items-center gap-3 mb-4"><Music className="w-6 h-6 text-[#D4AF37]" /><span className="text-lg font-bold text-[#1a1f3a]">Glória em Louvores</span></div>
+              <p className="text-gray-500 text-sm">Levando a presença de Deus através da música. Uma família de fé que cresce a cada dia.</p>
             </div>
             <div>
               <h4 className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[2px] mb-4">Canal</h4>
@@ -274,6 +273,7 @@ export default function Home() {
             <div>
               <h4 className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[2px] mb-4">Comunidade</h4>
               <ul className="space-y-2 text-sm text-gray-500">
+                <li><a href="/blog" className="hover:text-[#D4AF37] transition-colors">Blog</a></li>
                 <li><a href="#contato" className="hover:text-[#D4AF37] transition-colors">Pedidos de Oração</a></li>
                 <li><a href="#contato" className="hover:text-[#D4AF37] transition-colors">Contato</a></li>
                 <li><a href="/admin" className="hover:text-[#D4AF37] transition-colors">Admin</a></li>
@@ -281,9 +281,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-[#E8E4E0] pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm">
-              © 2026 <a href="https://www.youtube.com/@gloriaemlouvores" target="_blank" className="text-[#D4AF37] hover:underline">Glória em Louvores</a>. Todos os direitos reservados.
-            </p>
+            <p className="text-gray-400 text-sm">© 2026 <a href="https://www.youtube.com/@gloriaemlouvores" target="_blank" className="text-[#D4AF37] hover:underline">Glória em Louvores</a>. Todos os direitos reservados.</p>
             <div className="flex gap-6 text-sm text-gray-400">
               <a href="#" className="hover:text-[#D4AF37] transition-colors">Política de Privacidade</a>
               <a href="#" className="hover:text-[#D4AF37] transition-colors">Termos de Uso</a>
