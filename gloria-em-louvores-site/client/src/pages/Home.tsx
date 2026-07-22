@@ -181,22 +181,37 @@ export default function Home() {
         <section className="py-16 sm:py-24 bg-[#F9F7F4]">
           <div className="container max-w-6xl mx-auto px-4">
             <div className="text-center mb-12 sm:mb-16">
-              <p className="text-[#D4AF37] text-sm font-semibold uppercase tracking-[3px] mb-4">Blog</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6">Reflexões de <span className="text-[#D4AF37]">fé</span></h2>
+              <div className="inline-flex items-center gap-2 bg-[#D4AF37]/10 rounded-full px-4 py-1.5 mb-4">
+                <BookOpen className="w-4 h-4 text-[#D4AF37]" />
+                <span className="text-[#D4AF37] text-sm font-semibold">Blog</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-4">Reflexões de <span className="text-[#D4AF37]">fé</span></h2>
+              <p className="text-gray-500 max-w-xl mx-auto">Artigos sobre louvor, oração e vida cristã para fortalecer sua jornada</p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {blogPosts.slice(0, 3).map((post) => (
                 <a key={post.id} href={`/blog/${post.id}`}>
-                  <Card className="border border-[#E8E4E0] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white cursor-pointer h-full">
-                    <div className="h-40 sm:h-48 bg-gradient-to-br from-[#F4E4C1] to-[#F9F7F4] flex items-center justify-center text-5xl sm:text-6xl">{post.icon}</div>
+                  <Card className="border border-[#E8E4E0] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white cursor-pointer h-full group">
+                    <div className="h-40 sm:h-48 bg-gradient-to-br from-[#F4E4C1] to-[#F9F7F4] flex items-center justify-center text-5xl sm:text-6xl group-hover:scale-110 transition-transform duration-500">{post.icon}</div>
                     <CardContent className="p-5 sm:p-6">
-                      <span className="inline-block bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-semibold px-3 py-1 rounded-full mb-3">{post.tag}</span>
-                      <h3 className="text-lg sm:text-xl font-bold text-[#0f0f0f] mb-2 line-clamp-2">{post.title}</h3>
-                      <p className="text-gray-600 text-sm line-clamp-2">{post.desc}</p>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="inline-block bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-semibold px-3 py-1 rounded-full">{post.tag}</span>
+                        <span className="text-xs text-gray-400">{post.date}</span>
+                      </div>
+                      <h3 className="text-lg sm:text-xl font-bold text-[#0f0f0f] mb-2 line-clamp-2 group-hover:text-[#D4AF37] transition-colors">{post.title}</h3>
+                      <p className="text-gray-600 text-sm line-clamp-2 mb-4">{post.desc}</p>
+                      <span className="text-[#D4AF37] font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">Ler artigo <span>→</span></span>
                     </CardContent>
                   </Card>
                 </a>
               ))}
+            </div>
+            <div className="text-center mt-10">
+              <a href="/blog">
+                <Button variant="outline" size="lg" className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white gap-2 px-8">
+                  <BookOpen className="w-5 h-5" /> Ver todos os artigos
+                </Button>
+              </a>
             </div>
           </div>
         </section>
@@ -218,15 +233,30 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="container max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#D4AF37] mb-6">Não perca nenhum louvor</h2>
-          <p className="text-gray-600 text-base sm:text-lg mb-10">Inscreva-se no canal e ative o sininho para receber notificações sempre que um novo louvor for publicado.</p>
-          <Button asChild size="lg" className="bg-[#FF0000] hover:bg-[#CC0000] text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-[#FF0000]/25">
-            <a href="https://www.youtube.com/@gloriaemlouvores?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
-              <Youtube className="w-6 h-6 mr-3" /> Inscreva-se no Canal
-            </a>
-          </Button>
+      <section className="py-16 sm:py-24 bg-gradient-to-br from-[#FF0000] via-[#CC0000] to-[#990000] relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full blur-[80px]" />
+        </div>
+        <div className="container max-w-3xl mx-auto px-4 text-center relative z-10">
+          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
+            <Youtube className="w-4 h-4 text-white" />
+            <span className="text-white text-sm font-medium">+1.400 inscritos</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">Não perca nenhum louvor</h2>
+          <p className="text-white/80 text-base sm:text-lg mb-10 max-w-xl mx-auto">Inscreva-se no canal e ative o sininho para receber notificações sempre que um novo louvor for publicado.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild size="lg" className="bg-white text-[#FF0000] hover:bg-gray-100 px-8 py-6 text-lg rounded-full shadow-xl font-bold gap-2">
+              <a href="https://www.youtube.com/@gloriaemlouvores?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
+                <Youtube className="w-6 h-6" /> Inscreva-se Agora
+              </a>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="border-2 border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-full gap-2">
+              <a href="https://www.youtube.com/@gloriaemlouvores/videos" target="_blank" rel="noopener noreferrer">
+                Assistir Vídeos
+              </a>
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -235,7 +265,7 @@ export default function Home() {
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
-              <img src="/images/logotipo.png" alt="Glória em Louvores" className="h-14 object-contain mb-4" />
+              <img src="/images/logotipo.png" alt="Glória em Louvores" className="h-20 object-contain mb-4" style={{ mixBlendMode: "lighten" }} />
               <p className="text-gray-500 text-sm">Levando a presença de Deus através da música. Uma família de fé que cresce a cada dia.</p>
             </div>
             <div>
