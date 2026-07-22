@@ -52,7 +52,7 @@ export default function Home() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=1920&q=80"
+            src="https://images.pexels.com/photos/3056695/pexels-photo-3056695.jpeg?auto=compress&cs=tinysrgb&w=1920"
             alt="Adoração"
             className="w-full h-full object-cover"
           />
