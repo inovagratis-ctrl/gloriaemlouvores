@@ -37,11 +37,18 @@ export interface Psalm {
   reference: string;
 }
 
+export interface Short {
+  id: string;
+  youtubeId: string;
+  title: string;
+}
+
 interface DataContextType {
   videos: Video[];
   blogPosts: BlogPost[];
   prayerRequests: PrayerRequest[];
   psalms: Psalm[];
+  shorts: Short[];
   addVideo: (video: Omit<Video, 'id'>) => void;
   updateVideo: (id: string, video: Partial<Video>) => void;
   deleteVideo: (id: string) => void;
@@ -52,6 +59,9 @@ interface DataContextType {
   addPsalm: (psalm: Omit<Psalm, 'id'>) => void;
   updatePsalm: (id: string, psalm: Partial<Psalm>) => void;
   deletePsalm: (id: string) => void;
+  addShort: (short: Omit<Short, 'id'>) => void;
+  updateShort: (id: string, short: Partial<Short>) => void;
+  deleteShort: (id: string) => void;
   addPrayerRequest: (request: Omit<PrayerRequest, 'id' | 'date' | 'read'>) => void;
   markAsRead: (id: string) => void;
   deletePrayerRequest: (id: string) => void;
@@ -75,6 +85,10 @@ const defaultPsalms: Psalm[] = [
   { id: '1', text: 'Louvarei ao Senhor em todo o tempo; o seu louvor estará continuamente na minha boca.', reference: 'Salmo 34:1' },
   { id: '2', text: 'O Senhor é o meu pastor; nada me faltará.', reference: 'Salmo 23:1' },
   { id: '3', text: 'Em ti, ó Senhor, eu refugio; jamais ficarei confundido; livra-me e livra-me na tua justiça.', reference: 'Salmo 31:1' },
+];
+
+const defaultShorts: Short[] = [
+  { id: '1', youtubeId: '5MnuJP2ER1g', title: 'Louvor Moment' },
 ];
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -111,10 +125,16 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return saved ? JSON.parse(saved) : defaultPsalms;
   });
 
+  const [shorts, setShorts] = useState<Short[]>(() => {
+    const saved = localStorage.getItem('gloria-shorts');
+    return saved ? JSON.parse(saved) : defaultShorts;
+  });
+
   useEffect(() => { localStorage.setItem('gloria-videos', JSON.stringify(videos)); }, [videos]);
   useEffect(() => { localStorage.setItem('gloria-blog', JSON.stringify(blogPosts)); }, [blogPosts]);
   useEffect(() => { localStorage.setItem('gloria-requests', JSON.stringify(prayerRequests)); }, [prayerRequests]);
   useEffect(() => { localStorage.setItem('gloria-psalms', JSON.stringify(psalms)); }, [psalms]);
+  useEffect(() => { localStorage.setItem('gloria-shorts', JSON.stringify(shorts)); }, [shorts]);
 
   const addVideo = (video: Omit<Video, 'id'>) => setVideos(prev => [...prev, { ...video, id: Date.now().toString() }]);
   const updateVideo = (id: string, video: Partial<Video>) => setVideos(prev => prev.map(v => v.id === id ? { ...v, ...video } : v));
@@ -133,8 +153,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const updatePsalm = (id: string, psalm: Partial<Psalm>) => setPsalms(prev => prev.map(p => p.id === id ? { ...p, ...psalm } : p));
   const deletePsalm = (id: string) => setPsalms(prev => prev.filter(p => p.id !== id));
 
+  const addShort = (short: Omit<Short, 'id'>) => setShorts(prev => [...prev, { ...short, id: Date.now().toString() }]);
+  const updateShort = (id: string, short: Partial<Short>) => setShorts(prev => prev.map(s => s.id === id ? { ...s, ...short } : s));
+  const deleteShort = (id: string) => setShorts(prev => prev.filter(s => s.id !== id));
+
   return (
-    <DataContext.Provider value={{ videos, blogPosts, prayerRequests, psalms, addVideo, updateVideo, deleteVideo, toggleFeatured, addBlogPost, updateBlogPost, deleteBlogPost, addPsalm, updatePsalm, deletePsalm, addPrayerRequest, markAsRead, deletePrayerRequest }}>
+    <DataContext.Provider value={{ videos, blogPosts, prayerRequests, psalms, shorts, addVideo, updateVideo, deleteVideo, toggleFeatured, addBlogPost, updateBlogPost, deleteBlogPost, addPsalm, updatePsalm, deletePsalm, addShort, updateShort, deleteShort, addPrayerRequest, markAsRead, deletePrayerRequest }}>
       {children}
     </DataContext.Provider>
   );

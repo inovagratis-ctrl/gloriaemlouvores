@@ -6,6 +6,8 @@ import AdminDashboard from "@/pages/AdminDashboard";
 import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
 import ContactForm from "@/pages/Contact";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import TermsOfUse from "@/pages/TermsOfUse";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { DataProvider } from "./contexts/DataContext";
@@ -33,6 +35,8 @@ function Router() {
       <Route path="/blog" component={BlogList} />
       <Route path="/blog/:id" component={BlogPost} />
       <Route path="/contato" component={ContactForm} />
+      <Route path="/privacidade" component={PrivacyPolicy} />
+      <Route path="/termos" component={TermsOfUse} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

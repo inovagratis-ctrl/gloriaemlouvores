@@ -8,16 +8,16 @@ import VideoCarousel from "@/components/VideoCarousel";
 import PsalmsCarousel from "@/components/PsalmsCarousel";
 
 const categories = [
-  { icon: <Sun className="w-8 h-8" />, title: "Louvores de Adoração", desc: "Momentos intensos de presença de Deus", color: "from-amber-50 to-orange-50" },
-  { icon: <BookOpen className="w-8 h-8" />, title: "Louvores Para Orar", desc: "Músicas que abrem os céus sobre sua vida", color: "from-blue-50 to-indigo-50" },
-  { icon: <Heart className="w-8 h-8" />, title: "Louvores de Paz", desc: "Tranquilidade e descanso em Deus", color: "from-green-50 to-emerald-50" },
-  { icon: <Star className="w-8 h-8" />, title: "Louvores de Fé", desc: "Fortaleça sua fé e crê nos milagres", color: "from-yellow-50 to-amber-50" },
-  { icon: <Shield className="w-8 h-8" />, title: "Louvores de Proteção", desc: "Cobertura divina sobre sua família", color: "from-purple-50 to-violet-50" },
-  { icon: <Moon className="w-8 h-8" />, title: "Louvores Para Dormir", desc: "Descanse na presença do Senhor", color: "from-indigo-50 to-blue-50" },
+  { icon: <Sun className="w-8 h-8" />, title: "Louvores de Adoração", desc: "Momentos intensos de presença de Deus", color: "from-amber-50 to-orange-50", link: "https://www.youtube.com/results?search_query=louvor+adoração+gospel+gloria+em+louvores" },
+  { icon: <BookOpen className="w-8 h-8" />, title: "Louvores Para Orar", desc: "Músicas que abrem os céus sobre sua vida", color: "from-blue-50 to-indigo-50", link: "https://www.youtube.com/results?search_query=louvor+para+orar+gospel+gloria+em+louvores" },
+  { icon: <Heart className="w-8 h-8" />, title: "Louvores de Paz", desc: "Tranquilidade e descanso em Deus", color: "from-green-50 to-emerald-50", link: "https://www.youtube.com/results?search_query=louvor+paz+gospel+gloria+em+louvores" },
+  { icon: <Star className="w-8 h-8" />, title: "Louvores de Fé", desc: "Fortaleça sua fé e crê nos milagres", color: "from-yellow-50 to-amber-50", link: "https://www.youtube.com/results?search_query=louvor+fé+miracles+gospel+gloria+em+louvores" },
+  { icon: <Shield className="w-8 h-8" />, title: "Louvores de Proteção", desc: "Cobertura divina sobre sua família", color: "from-purple-50 to-violet-50", link: "https://www.youtube.com/results?search_query=louvor+proteção+gospel+gloria+em+louvores" },
+  { icon: <Moon className="w-8 h-8" />, title: "Louvores Para Dormir", desc: "Descanse na presença do Senhor", color: "from-indigo-50 to-blue-50", link: "https://www.youtube.com/results?search_query=louvor+dormir+descanso+gospel+gloria+em+louvores" },
 ];
 
 export default function Home() {
-  const { videos, blogPosts } = useData();
+  const { videos, blogPosts, psalms, shorts } = useData();
   const [randomVideos, setRandomVideos] = useState(() => shuffleArray(videos).slice(0, 3));
 
   const featuredVideos = useMemo(() => videos.filter(v => v.featured), [videos]);
@@ -162,18 +162,11 @@ export default function Home() {
             <p className="text-gray-500 max-w-xl mx-auto">Clipes curtos que tocam o coração — perfeitos para compartilhar a Palavra</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[
-              { id: "5MnuJP2ER1g", title: "Louvor Moment" },
-              { id: "5MnuJP2ER1g", title: "Oração Rápida" },
-              { id: "5MnuJP2ER1g", title: "Versículo" },
-              { id: "5MnuJP2ER1g", title: "Adoração" },
-              { id: "5MnuJP2ER1g", title: "Fé" },
-              { id: "5MnuJP2ER1g", title: "Paz" },
-            ].map((short, i) => (
-              <a key={i} href={`https://youtube.com/shorts/${short.id}`} target="_blank" rel="noopener noreferrer" className="group">
+            {shorts.map((short) => (
+              <a key={short.id} href={`https://youtube.com/shorts/${short.youtubeId}`} target="_blank" rel="noopener noreferrer" className="group">
                 <div className="relative aspect-[9/16] rounded-2xl overflow-hidden bg-gradient-to-br from-[#1a1f3a] to-[#0f0f0f] border-2 border-transparent hover:border-[#FF0000] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                   <img
-                    src={`https://img.youtube.com/vi/${short.id}/maxresdefault.jpg`}
+                    src={`https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}
                     alt={short.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
@@ -209,14 +202,16 @@ export default function Home() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {categories.map((cat, i) => (
-              <Card key={i} className={`border border-[#E8E4E0] bg-gradient-to-br ${cat.color} hover:border-[#D4AF37] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer`}>
-                <CardContent className="p-6 sm:p-8">
-                  <div className="text-[#D4AF37] mb-4">{cat.icon}</div>
-                  <h3 className="text-lg sm:text-xl font-bold text-[#1a1f3a] mb-2">{cat.title}</h3>
-                  <p className="text-gray-600 text-sm sm:text-base mb-4">{cat.desc}</p>
-                  <span className="text-[#D4AF37] font-semibold text-sm">Ver louvores →</span>
-                </CardContent>
-              </Card>
+              <a key={i} href={cat.link} target="_blank" rel="noopener noreferrer">
+                <Card className={`border border-[#E8E4E0] bg-gradient-to-br ${cat.color} hover:border-[#D4AF37] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer h-full`}>
+                  <CardContent className="p-6 sm:p-8">
+                    <div className="text-[#D4AF37] mb-4">{cat.icon}</div>
+                    <h3 className="text-lg sm:text-xl font-bold text-[#1a1f3a] mb-2">{cat.title}</h3>
+                    <p className="text-gray-600 text-sm sm:text-base mb-4">{cat.desc}</p>
+                    <span className="text-[#D4AF37] font-semibold text-sm">Ver louvores →</span>
+                  </CardContent>
+                </Card>
+              </a>
             ))}
           </div>
         </div>
@@ -298,7 +293,7 @@ export default function Home() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">Não perca nenhum louvor</h2>
           <p className="text-white/70 text-base sm:text-lg mb-10 max-w-xl mx-auto">Inscreva-se no canal e ative o sininho para receber notificações sempre que um novo louvor for publicado.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-[#D4AF37] hover:bg-[#B8942E] text-white px-8 py-6 text-lg rounded-full shadow-xl font-bold gap-2">
+            <Button asChild size="lg" className="bg-[#FF0000] hover:bg-[#CC0000] text-white px-8 py-6 text-lg rounded-full shadow-xl font-bold gap-2 shadow-[#FF0000]/25">
               <a href="https://www.youtube.com/@gloriaemlouvores?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
                 <Youtube className="w-6 h-6" /> Inscreva-se Agora
               </a>
@@ -362,8 +357,8 @@ export default function Home() {
           <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-white/40 text-sm">© 2026 <a href="https://www.youtube.com/@gloriaemlouvores" target="_blank" className="text-[#D4AF37] hover:underline">Glória em Louvores</a>. Todos os direitos reservados.</p>
             <div className="flex gap-6 text-sm text-white/40">
-              <a href="#" className="hover:text-[#D4AF37] transition-colors">Política de Privacidade</a>
-              <a href="#" className="hover:text-[#D4AF37] transition-colors">Termos de Uso</a>
+              <a href="/privacidade" className="hover:text-[#D4AF37] transition-colors">Política de Privacidade</a>
+              <a href="/termos" className="hover:text-[#D4AF37] transition-colors">Termos de Uso</a>
             </div>
           </div>
         </div>

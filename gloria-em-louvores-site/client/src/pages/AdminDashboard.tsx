@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useData, Video, BlogPost, Psalm } from '@/contexts/DataContext';
+import { useData, Video, BlogPost, Psalm, Short } from '@/contexts/DataContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Trash2, Edit, Save, X, Mail, Eye, Music, FileText, Star, ArrowLeft, BookOpen } from 'lucide-react';
+import { Plus, Trash2, Edit, Save, X, Mail, Eye, Music, FileText, Star, ArrowLeft, BookOpen, Smartphone } from 'lucide-react';
 import { Link } from 'wouter';
 
 interface AdminDashboardProps {
@@ -14,18 +14,21 @@ interface AdminDashboardProps {
 }
 
 export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
-  const { videos, blogPosts, prayerRequests, psalms, addVideo, updateVideo, deleteVideo, toggleFeatured, addBlogPost, updateBlogPost, deleteBlogPost, addPsalm, updatePsalm, deletePsalm, markAsRead, deletePrayerRequest } = useData();
+  const { videos, blogPosts, prayerRequests, psalms, shorts, addVideo, updateVideo, deleteVideo, toggleFeatured, addBlogPost, updateBlogPost, deleteBlogPost, addPsalm, updatePsalm, deletePsalm, addShort, updateShort, deleteShort, markAsRead, deletePrayerRequest } = useData();
 
   const [editingVideo, setEditingVideo] = useState<Video | null>(null);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [editingPsalm, setEditingPsalm] = useState<Psalm | null>(null);
+  const [editingShort, setEditingShort] = useState<Short | null>(null);
   const [showNewVideo, setShowNewVideo] = useState(false);
   const [showNewPost, setShowNewPost] = useState(false);
   const [showNewPsalm, setShowNewPsalm] = useState(false);
+  const [showNewShort, setShowNewShort] = useState(false);
 
   const [videoForm, setVideoForm] = useState({ youtubeId: '', title: '', views: '', category: 'adoracao', featured: false, date: new Date().toISOString().split('T')[0] });
   const [postForm, setPostForm] = useState({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', image: '', date: new Date().toLocaleDateString('pt-BR') });
   const [psalmForm, setPsalmForm] = useState({ text: '', reference: '' });
+  const [shortForm, setShortForm] = useState({ youtubeId: '', title: '' });
 
   const unreadCount = prayerRequests.filter(r => !r.read).length;
 
@@ -62,6 +65,17 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
     setPsalmForm({ text: '', reference: '' });
   };
 
+  const handleSaveShort = () => {
+    if (editingShort) {
+      updateShort(editingShort.id, shortForm);
+      setEditingShort(null);
+    } else {
+      addShort(shortForm);
+      setShowNewShort(false);
+    }
+    setShortForm({ youtubeId: '', title: '' });
+  };
+
   const startEditVideo = (video: Video) => {
     setEditingVideo(video);
     setVideoForm({ youtubeId: video.youtubeId, title: video.title, views: video.views, category: video.category, featured: video.featured, date: video.date });
@@ -75,6 +89,11 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const startEditPsalm = (psalm: Psalm) => {
     setEditingPsalm(psalm);
     setPsalmForm({ text: psalm.text, reference: psalm.reference });
+  };
+
+  const startEditShort = (short: Short) => {
+    setEditingShort(short);
+    setShortForm({ youtubeId: short.youtubeId, title: short.title });
   };
 
   return (
@@ -97,6 +116,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
             <TabsTrigger value="videos" className="gap-2"><Music className="w-4 h-4" /> Vídeos ({videos.length})</TabsTrigger>
             <TabsTrigger value="blog" className="gap-2"><FileText className="w-4 h-4" /> Blog ({blogPosts.length})</TabsTrigger>
             <TabsTrigger value="psalms" className="gap-2"><BookOpen className="w-4 h-4" /> Salmos ({psalms.length})</TabsTrigger>
+            <TabsTrigger value="shorts" className="gap-2"><Smartphone className="w-4 h-4" /> Shorts ({shorts.length})</TabsTrigger>
             <TabsTrigger value="requests" className="gap-2"><Mail className="w-4 h-4" /> Pedidos {unreadCount > 0 && `(${unreadCount})`}</TabsTrigger>
           </TabsList>
 
@@ -286,6 +306,55 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm" onClick={() => startEditPsalm(psalm)}><Edit className="w-4 h-4" /></Button>
                       <Button variant="outline" size="sm" onClick={() => deletePsalm(psalm.id)} className="text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* SHORTS TAB */}
+          <TabsContent value="shorts">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-[#1a1f3a]">YouTube Shorts</h2>
+              <Button onClick={() => { setShowNewShort(true); setEditingShort(null); setShortForm({ youtubeId: '', title: '' }); }} className="bg-[#D4AF37] hover:bg-[#B8942E] text-white gap-2">
+                <Plus className="w-4 h-4" /> Novo Short
+              </Button>
+            </div>
+
+            {(showNewShort || editingShort) && (
+              <Card className="mb-6">
+                <CardHeader><CardTitle>{editingShort ? 'Editar Short' : 'Novo Short'}</CardTitle></CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label>ID do YouTube</Label>
+                    <Input placeholder="Ex: 5MnuJP2ER1g (cole do link youtube.com/shorts/ID)" value={shortForm.youtubeId} onChange={e => setShortForm({ ...shortForm, youtubeId: e.target.value })} />
+                    {shortForm.youtubeId && <img src={`https://img.youtube.com/vi/${shortForm.youtubeId}/mqdefault.jpg`} alt="Preview" className="mt-2 h-24 rounded-lg" />}
+                  </div>
+                  <div>
+                    <Label>Título</Label>
+                    <Input placeholder="Ex: Louvor Moment" value={shortForm.title} onChange={e => setShortForm({ ...shortForm, title: e.target.value })} />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button onClick={handleSaveShort} className="bg-green-600 hover:bg-green-700 text-white gap-2"><Save className="w-4 h-4" /> Salvar</Button>
+                    <Button variant="outline" onClick={() => { setShowNewShort(false); setEditingShort(null); }} className="gap-2"><X className="w-4 h-4" /> Cancelar</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            <div className="space-y-4">
+              {shorts.map(short => (
+                <Card key={short.id}>
+                  <CardContent className="p-4 flex items-center gap-4">
+                    <img src={`https://img.youtube.com/vi/${short.youtubeId}/mqdefault.jpg`} alt="" className="w-20 h-32 object-cover rounded-lg" />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-[#1a1f3a]">{short.title}</h3>
+                      <p className="text-sm text-gray-500">ID: {short.youtubeId}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => startEditShort(short)}><Edit className="w-4 h-4" /></Button>
+                      <Button variant="outline" size="sm" onClick={() => deleteShort(short.id)} className="text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></Button>
                     </div>
                   </CardContent>
                 </Card>
