@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Youtube, BookOpen, Heart, Shield, Moon, Sun, Music, Star, Send, Shuffle, Clock, Award, Smartphone } from "lucide-react";
+import { Youtube, BookOpen, Heart, Shield, Moon, Sun, Music, Star, Send, Shuffle, Clock, Award, Smartphone, Quote } from "lucide-react";
 import { useData, shuffleArray } from "@/contexts/DataContext";
 import Navbar from "@/components/Navbar";
 import VideoCarousel from "@/components/VideoCarousel";
+import PsalmsCarousel from "@/components/PsalmsCarousel";
 
 const categories = [
   { icon: <Sun className="w-8 h-8" />, title: "Louvores de Adoração", desc: "Momentos intensos de presença de Deus", color: "from-amber-50 to-orange-50" },
@@ -77,12 +78,7 @@ export default function Home() {
 
       {/* Scripture */}
       <section className="py-16 sm:py-24 bg-[#F9F7F4]">
-        <div className="container max-w-4xl mx-auto px-4 text-center">
-          <blockquote className="text-xl sm:text-2xl md:text-3xl text-[#1a1f3a] italic font-serif leading-relaxed">
-            "Louvarei ao Senhor em todo o tempo; o seu louvor estará continuamente na minha boca."
-          </blockquote>
-          <cite className="block mt-6 text-gray-500 not-italic text-sm sm:text-base">— Salmo 34:1</cite>
-        </div>
+        <PsalmsCarousel />
       </section>
 
       {/* About */}

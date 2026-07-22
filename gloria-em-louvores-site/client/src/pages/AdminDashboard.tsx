@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useData, Video, BlogPost } from '@/contexts/DataContext';
+import { useData, Video, BlogPost, Psalm } from '@/contexts/DataContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,15 +14,18 @@ interface AdminDashboardProps {
 }
 
 export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
-  const { videos, blogPosts, prayerRequests, addVideo, updateVideo, deleteVideo, toggleFeatured, addBlogPost, updateBlogPost, deleteBlogPost, markAsRead, deletePrayerRequest } = useData();
+  const { videos, blogPosts, prayerRequests, psalms, addVideo, updateVideo, deleteVideo, toggleFeatured, addBlogPost, updateBlogPost, deleteBlogPost, addPsalm, updatePsalm, deletePsalm, markAsRead, deletePrayerRequest } = useData();
 
   const [editingVideo, setEditingVideo] = useState<Video | null>(null);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [editingPsalm, setEditingPsalm] = useState<Psalm | null>(null);
   const [showNewVideo, setShowNewVideo] = useState(false);
   const [showNewPost, setShowNewPost] = useState(false);
+  const [showNewPsalm, setShowNewPsalm] = useState(false);
 
   const [videoForm, setVideoForm] = useState({ youtubeId: '', title: '', views: '', category: 'adoracao', featured: false, date: new Date().toISOString().split('T')[0] });
   const [postForm, setPostForm] = useState({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', image: '', date: new Date().toLocaleDateString('pt-BR') });
+  const [psalmForm, setPsalmForm] = useState({ text: '', reference: '' });
 
   const unreadCount = prayerRequests.filter(r => !r.read).length;
 
@@ -48,6 +51,17 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
     setPostForm({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', image: '', date: new Date().toLocaleDateString('pt-BR') });
   };
 
+  const handleSavePsalm = () => {
+    if (editingPsalm) {
+      updatePsalm(editingPsalm.id, psalmForm);
+      setEditingPsalm(null);
+    } else {
+      addPsalm(psalmForm);
+      setShowNewPsalm(false);
+    }
+    setPsalmForm({ text: '', reference: '' });
+  };
+
   const startEditVideo = (video: Video) => {
     setEditingVideo(video);
     setVideoForm({ youtubeId: video.youtubeId, title: video.title, views: video.views, category: video.category, featured: video.featured, date: video.date });
@@ -56,6 +70,11 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const startEditPost = (post: BlogPost) => {
     setEditingPost(post);
     setPostForm({ icon: post.icon, tag: post.tag, title: post.title, desc: post.desc, content: post.content, image: post.image || '', date: post.date });
+  };
+
+  const startEditPsalm = (psalm: Psalm) => {
+    setEditingPsalm(psalm);
+    setPsalmForm({ text: psalm.text, reference: psalm.reference });
   };
 
   return (
@@ -77,6 +96,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
           <TabsList className="mb-8">
             <TabsTrigger value="videos" className="gap-2"><Music className="w-4 h-4" /> Vídeos ({videos.length})</TabsTrigger>
             <TabsTrigger value="blog" className="gap-2"><FileText className="w-4 h-4" /> Blog ({blogPosts.length})</TabsTrigger>
+            <TabsTrigger value="psalms" className="gap-2"><BookOpen className="w-4 h-4" /> Salmos ({psalms.length})</TabsTrigger>
             <TabsTrigger value="requests" className="gap-2"><Mail className="w-4 h-4" /> Pedidos {unreadCount > 0 && `(${unreadCount})`}</TabsTrigger>
           </TabsList>
 
@@ -218,6 +238,54 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm" onClick={() => startEditPost(post)}><Edit className="w-4 h-4" /></Button>
                       <Button variant="outline" size="sm" onClick={() => deleteBlogPost(post.id)} className="text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* PSALMS TAB */}
+          <TabsContent value="psalms">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-[#1a1f3a]">Salmos</h2>
+              <Button onClick={() => { setShowNewPsalm(true); setEditingPsalm(null); setPsalmForm({ text: '', reference: '' }); }} className="bg-[#D4AF37] hover:bg-[#B8942E] text-white gap-2">
+                <Plus className="w-4 h-4" /> Novo Salmo
+              </Button>
+            </div>
+
+            {(showNewPsalm || editingPsalm) && (
+              <Card className="mb-6">
+                <CardHeader><CardTitle>{editingPsalm ? 'Editar Salmo' : 'Novo Salmo'}</CardTitle></CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label>Texto do Salmo</Label>
+                    <Textarea placeholder="Ex: Louvarei ao Senhor em todo o tempo..." rows={3} value={psalmForm.text} onChange={e => setPsalmForm({ ...psalmForm, text: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Referência</Label>
+                    <Input placeholder="Ex: Salmo 34:1" value={psalmForm.reference} onChange={e => setPsalmForm({ ...psalmForm, reference: e.target.value })} />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button onClick={handleSavePsalm} className="bg-green-600 hover:bg-green-700 text-white gap-2"><Save className="w-4 h-4" /> Salvar</Button>
+                    <Button variant="outline" onClick={() => { setShowNewPsalm(false); setEditingPsalm(null); }} className="gap-2"><X className="w-4 h-4" /> Cancelar</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            <div className="space-y-4">
+              {psalms.map(psalm => (
+                <Card key={psalm.id}>
+                  <CardContent className="p-4 flex items-start gap-4">
+                    <div className="text-3xl">📖</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-[#1a1f3a] italic">"{psalm.text}"</p>
+                      <p className="text-sm text-[#D4AF37] mt-1">— {psalm.reference}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => startEditPsalm(psalm)}><Edit className="w-4 h-4" /></Button>
+                      <Button variant="outline" size="sm" onClick={() => deletePsalm(psalm.id)} className="text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></Button>
                     </div>
                   </CardContent>
                 </Card>

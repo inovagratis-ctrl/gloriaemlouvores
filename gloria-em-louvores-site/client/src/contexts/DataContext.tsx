@@ -31,10 +31,17 @@ export interface PrayerRequest {
   read: boolean;
 }
 
+export interface Psalm {
+  id: string;
+  text: string;
+  reference: string;
+}
+
 interface DataContextType {
   videos: Video[];
   blogPosts: BlogPost[];
   prayerRequests: PrayerRequest[];
+  psalms: Psalm[];
   addVideo: (video: Omit<Video, 'id'>) => void;
   updateVideo: (id: string, video: Partial<Video>) => void;
   deleteVideo: (id: string) => void;
@@ -42,6 +49,9 @@ interface DataContextType {
   addBlogPost: (post: Omit<BlogPost, 'id'>) => void;
   updateBlogPost: (id: string, post: Partial<BlogPost>) => void;
   deleteBlogPost: (id: string) => void;
+  addPsalm: (psalm: Omit<Psalm, 'id'>) => void;
+  updatePsalm: (id: string, psalm: Partial<Psalm>) => void;
+  deletePsalm: (id: string) => void;
   addPrayerRequest: (request: Omit<PrayerRequest, 'id' | 'date' | 'read'>) => void;
   markAsRead: (id: string) => void;
   deletePrayerRequest: (id: string) => void;
@@ -59,6 +69,12 @@ const defaultBlogPosts: BlogPost[] = [
   { id: '1', icon: '🔥', tag: 'Adoração', title: 'O Poder do Louvor na Hora da Batalha', desc: 'Quando Jó cantou no meio do sofrimento, algo se quebrou nos céus.', content: '', image: '', date: '21 de julho de 2026' },
   { id: '2', icon: '🙏', tag: 'Oração', title: 'Como Orar com Louvor e Mudar Situações', desc: 'A combinação de oração e louvor é devastadora.', content: '', image: '', date: '18 de julho de 2026' },
   { id: '3', icon: '🕊️', tag: 'Paz', title: '7 Louvores Que Trazem Paz Para o Coração', desc: 'A ansiedade não convive com a presença de Deus.', content: '', image: '', date: '15 de julho de 2026' },
+];
+
+const defaultPsalms: Psalm[] = [
+  { id: '1', text: 'Louvarei ao Senhor em todo o tempo; o seu louvor estará continuamente na minha boca.', reference: 'Salmo 34:1' },
+  { id: '2', text: 'O Senhor é o meu pastor; nada me faltará.', reference: 'Salmo 23:1' },
+  { id: '3', text: 'Em ti, ó Senhor, eu refugio; jamais ficarei confundido; livra-me e livra-me na tua justiça.', reference: 'Salmo 31:1' },
 ];
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -90,9 +106,15 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [psalms, setPsalms] = useState<Psalm[]>(() => {
+    const saved = localStorage.getItem('gloria-psalms');
+    return saved ? JSON.parse(saved) : defaultPsalms;
+  });
+
   useEffect(() => { localStorage.setItem('gloria-videos', JSON.stringify(videos)); }, [videos]);
   useEffect(() => { localStorage.setItem('gloria-blog', JSON.stringify(blogPosts)); }, [blogPosts]);
   useEffect(() => { localStorage.setItem('gloria-requests', JSON.stringify(prayerRequests)); }, [prayerRequests]);
+  useEffect(() => { localStorage.setItem('gloria-psalms', JSON.stringify(psalms)); }, [psalms]);
 
   const addVideo = (video: Omit<Video, 'id'>) => setVideos(prev => [...prev, { ...video, id: Date.now().toString() }]);
   const updateVideo = (id: string, video: Partial<Video>) => setVideos(prev => prev.map(v => v.id === id ? { ...v, ...video } : v));
@@ -107,8 +129,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const markAsRead = (id: string) => setPrayerRequests(prev => prev.map(r => r.id === id ? { ...r, read: true } : r));
   const deletePrayerRequest = (id: string) => setPrayerRequests(prev => prev.filter(r => r.id !== id));
 
+  const addPsalm = (psalm: Omit<Psalm, 'id'>) => setPsalms(prev => [...prev, { ...psalm, id: Date.now().toString() }]);
+  const updatePsalm = (id: string, psalm: Partial<Psalm>) => setPsalms(prev => prev.map(p => p.id === id ? { ...p, ...psalm } : p));
+  const deletePsalm = (id: string) => setPsalms(prev => prev.filter(p => p.id !== id));
+
   return (
-    <DataContext.Provider value={{ videos, blogPosts, prayerRequests, addVideo, updateVideo, deleteVideo, toggleFeatured, addBlogPost, updateBlogPost, deleteBlogPost, addPrayerRequest, markAsRead, deletePrayerRequest }}>
+    <DataContext.Provider value={{ videos, blogPosts, prayerRequests, psalms, addVideo, updateVideo, deleteVideo, toggleFeatured, addBlogPost, updateBlogPost, deleteBlogPost, addPsalm, updatePsalm, deletePsalm, addPrayerRequest, markAsRead, deletePrayerRequest }}>
       {children}
     </DataContext.Provider>
   );
