@@ -317,7 +317,7 @@ export default function Home() {
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
-              <img src="/images/LOGO-NOVA.jpg" alt="Glória em Louvores" className="h-24 object-contain mb-4" style={{ mixBlendMode: "darken" }} />
+              <img src="/images/GL%C3%93RIA_EM_LOUVORES-LOGO.png" alt="Glória em Louvores" className="h-20 object-contain mb-4" />
               <p className="text-gray-500 text-sm">Levando a presença de Deus através da música. Uma família de fé que cresce a cada dia.</p>
             </div>
             <div>
