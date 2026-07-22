@@ -48,10 +48,21 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <Navbar />
       {/* Hero */}
-      <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#1a1f3a] via-[#0f0f0f] to-[#1a1f3a]">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-[#D4AF37]/8 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#D4AF37]/5 rounded-full blur-[100px]" />
+      <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=1920&q=80"
+            alt="Adoração"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0f0f0f]/80 via-[#0f0f0f]/60 to-[#0f0f0f]/90" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1a1f3a]/50 to-transparent" />
+        </div>
+        {/* Glow effects */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-[#D4AF37]/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#D4AF37]/8 rounded-full blur-[100px]" />
         </div>
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-6 py-2.5 mb-8 backdrop-blur-sm">
