@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Youtube, BookOpen, Heart, Shield, Moon, Sun, Music, Star, Send, Shuffle, Clock, Award } from "lucide-react";
 import { useData, shuffleArray } from "@/contexts/DataContext";
 import Navbar from "@/components/Navbar";
+import VideoCarousel from "@/components/VideoCarousel";
 
 const categories = [
   { icon: <Sun className="w-8 h-8" />, title: "Louvores de Adoração", desc: "Momentos intensos de presença de Deus", color: "from-amber-50 to-orange-50" },
@@ -13,27 +14,6 @@ const categories = [
   { icon: <Shield className="w-8 h-8" />, title: "Louvores de Proteção", desc: "Cobertura divina sobre sua família", color: "from-purple-50 to-violet-50" },
   { icon: <Moon className="w-8 h-8" />, title: "Louvores Para Dormir", desc: "Descanse na presença do Senhor", color: "from-indigo-50 to-blue-50" },
 ];
-
-function VideoCard({ video }: { video: any }) {
-  return (
-    <Card className="border-0 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-      <div className="aspect-video">
-        <iframe
-          src={`https://www.youtube.com/embed/${video.youtubeId}`}
-          title={video.title}
-          className="w-full h-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          loading="lazy"
-        />
-      </div>
-      <CardContent className="p-5 sm:p-6">
-        <h3 className="text-base sm:text-lg font-bold text-[#1a1f3a] mb-2 line-clamp-2">{video.title}</h3>
-        <p className="text-gray-500 text-xs sm:text-sm">{video.views}</p>
-      </CardContent>
-    </Card>
-  );
-}
 
 export default function Home() {
   const { videos, blogPosts } = useData();
@@ -52,7 +32,7 @@ export default function Home() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
-            src="https://images.pexels.com/photos/3056695/pexels-photo-3056695.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            src="/images/hero.jpg"
             alt="Adoração"
             className="w-full h-full object-cover"
           />
@@ -140,9 +120,7 @@ export default function Home() {
               <Award className="w-6 h-6 text-[#D4AF37]" />
               <h2 className="text-2xl sm:text-3xl font-bold text-[#0f0f0f]">Destaques</h2>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {featuredVideos.map(video => <VideoCard key={video.id} video={video} />)}
-            </div>
+            <VideoCarousel videos={featuredVideos} />
           </div>
         </section>
       )}
@@ -155,9 +133,7 @@ export default function Home() {
               <Clock className="w-6 h-6 text-[#D4AF37]" />
               <h2 className="text-2xl sm:text-3xl font-bold text-[#0f0f0f]">Recentes</h2>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {recentVideos.map(video => <VideoCard key={video.id} video={video} />)}
-            </div>
+            <VideoCarousel videos={recentVideos} />
           </div>
         </section>
       )}
@@ -174,9 +150,7 @@ export default function Home() {
               <Shuffle className="w-4 h-4" /> Trocar
             </Button>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {randomVideos.map(video => <VideoCard key={video.id} video={video} />)}
-          </div>
+          <VideoCarousel videos={randomVideos} />
         </div>
       </section>
 
