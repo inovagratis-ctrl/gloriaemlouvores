@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Trash2, Edit, Save, X, Mail, Eye, Music, FileText, Star, ArrowLeft, BookOpen, Smartphone } from 'lucide-react';
+import { Plus, Trash2, Edit, Save, X, Mail, Eye, Music, FileText, Star, ArrowLeft, BookOpen, Smartphone, Image, Bold, Italic, Heading2, Heading3, Quote, Link } from 'lucide-react';
 import { Link } from 'wouter';
 
 interface AdminDashboardProps {
@@ -94,6 +94,25 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const startEditShort = (short: Short) => {
     setEditingShort(short);
     setShortForm({ youtubeId: short.youtubeId, title: short.title });
+  };
+
+  const insertHTML = (tag: string, promptText?: string) => {
+    let insertion = '';
+    if (promptText) {
+      const value = prompt(promptText);
+      if (!value) return;
+      if (tag === 'img') {
+        insertion = `<img src="${value}" alt="Descrição" className="w-full rounded-lg" />`;
+      } else if (tag === 'a') {
+        const text = prompt('Texto do link:');
+        insertion = `<a href="${value}" target="_blank" className="text-[#D4AF37] underline">${text || value}</a>`;
+      } else {
+        insertion = `<${tag}>${value}</${tag}>`;
+      }
+    } else {
+      insertion = `<${tag}></${tag}>`;
+    }
+    setPostForm(prev => ({ ...prev, content: prev.content + insertion }));
   };
 
   return (
@@ -228,7 +247,16 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   </div>
                   <div>
                     <Label>Conteúdo (aceita HTML)</Label>
-                    <div className="text-xs text-gray-500 mb-1">Use &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;blockquote&gt;, &lt;img&gt;, &lt;a&gt;</div>
+                    <div className="flex flex-wrap gap-1 mb-2 p-2 bg-gray-50 rounded-lg border">
+                      <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('h2')} className="h-8 px-2 text-xs gap-1"><Heading2 className="w-3 h-3" /> H2</Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('h3')} className="h-8 px-2 text-xs gap-1"><Heading3 className="w-3 h-3" /> H3</Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('strong', 'Texto em negrito:')} className="h-8 px-2 text-xs gap-1"><Bold className="w-3 h-3" /> Negrito</Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('em', 'Texto em itálico:')} className="h-8 px-2 text-xs gap-1"><Italic className="w-3 h-3" /> Itálico</Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('blockquote', 'Citação:')} className="h-8 px-2 text-xs gap-1"><Quote className="w-3 h-3" /> Citação</Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('img', 'URL da imagem:')} className="h-8 px-2 text-xs gap-1 text-blue-600"><Image className="w-3 h-3" /> Imagem</Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('a', 'URL do link:')} className="h-8 px-2 text-xs gap-1 text-green-600"><Link className="w-3 h-3" /> Link</Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('p', 'Parágrafo:')} className="h-8 px-2 text-xs gap-1">¶ Parágrafo</Button>
+                    </div>
                     <Textarea placeholder="<h2>Título da Seção</h2>&#10;<p>Conteúdo do artigo...</p>&#10;<blockquote>Citação bíblica</blockquote>&#10;<strong>Texto em negrito</strong>" rows={10} value={postForm.content} onChange={e => setPostForm({ ...postForm, content: e.target.value })} className="font-mono text-sm" />
                     {postForm.content && (
                       <div className="mt-2">

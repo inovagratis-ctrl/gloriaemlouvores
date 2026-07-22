@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Youtube, BookOpen, Heart, Shield, Moon, Sun, Music, Star, Send, Shuffle, Clock, Award, Smartphone, Quote } from "lucide-react";
@@ -19,6 +19,16 @@ const categories = [
 export default function Home() {
   const { videos, blogPosts, psalms, shorts } = useData();
   const [randomVideos, setRandomVideos] = useState(() => shuffleArray(videos).slice(0, 3));
+  const [channelStats, setChannelStats] = useState({ subscribers: 1400, videos: 107, views: 6800 });
+
+  useEffect(() => {
+    fetch("/api/channel-stats")
+      .then(res => res.json())
+      .then(data => {
+        if (data.subscribers) setChannelStats(data);
+      })
+      .catch(() => {});
+  }, []);
 
   const featuredVideos = useMemo(() => videos.filter(v => v.featured), [videos]);
   const recentVideos = useMemo(() => [...videos].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3), [videos]);
@@ -69,9 +79,9 @@ export default function Home() {
             </Button>
           </div>
           <div className="flex justify-center gap-8 sm:gap-12 mt-16">
-            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">107+</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Vídeos</div></div>
-            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">1.4K+</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Inscritos</div></div>
-            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">6.8K</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Views no Top</div></div>
+            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.videos}+</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Vídeos</div></div>
+            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.subscribers >= 1000 ? `${(channelStats.subscribers / 1000).toFixed(1)}K+` : `${channelStats.subscribers}+`}</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Inscritos</div></div>
+            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.views >= 1000 ? `${(channelStats.views / 1000).toFixed(1)}K` : channelStats.views}</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Views no Top</div></div>
           </div>
         </div>
       </section>
