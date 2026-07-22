@@ -37,16 +37,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                scrolled ? "bg-[#D4AF37]" : "bg-white/10 backdrop-blur-sm border border-white/20"
-              }`}>
-                <Music className={`w-5 h-5 transition-colors ${scrolled ? "text-white" : "text-[#D4AF37]"}`} />
-              </div>
-              <span className={`text-base sm:text-lg font-bold transition-colors duration-300 hidden sm:block ${
-                scrolled ? "text-[#1a1f3a]" : "text-white"
-              }`}>
-                Glória em Louvores
-              </span>
+              <img src="/images/logotipo.png" alt="Glória em Louvores" className={`h-10 sm:h-12 object-contain transition-all duration-300 ${scrolled ? "drop-shadow-sm" : "drop-shadow-lg"}`} />
             </Link>
 
             {/* Desktop Nav */}
@@ -111,12 +102,7 @@ export default function Navbar() {
         }`}>
           <div className="p-6">
             <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-[#D4AF37] flex items-center justify-center">
-                  <Music className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-base font-bold text-[#1a1f3a]">Glória em Louvores</span>
-              </div>
+              <img src="/images/logotipo.png" alt="Glória em Louvores" className="h-10 object-contain" />
               <button onClick={() => setMobileOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100">
                 <X className="w-4 h-4" />
               </button>

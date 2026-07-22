@@ -235,7 +235,7 @@ export default function Home() {
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="flex items-center gap-3 mb-4"><Music className="w-6 h-6 text-[#D4AF37]" /><span className="text-lg font-bold text-[#1a1f3a]">Glória em Louvores</span></div>
+              <img src="/images/logotipo.png" alt="Glória em Louvores" className="h-14 object-contain mb-4" />
               <p className="text-gray-500 text-sm">Levando a presença de Deus através da música. Uma família de fé que cresce a cada dia.</p>
             </div>
             <div>
