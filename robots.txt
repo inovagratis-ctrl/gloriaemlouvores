@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gloriaemlouvores.com.br/sitemap.xml
