@@ -313,16 +313,30 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#E8E4E0] py-10 sm:py-12 bg-[#F9F7F4]">
-        <div className="container max-w-6xl mx-auto px-4">
+      <footer className="relative border-t border-[#E8E4E0] py-10 sm:py-12 bg-[#1a1f3a] overflow-hidden">
+        {/* Silhueta de Jesus */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none">
+          <svg viewBox="0 0 200 300" className="h-[400px] w-auto" fill="currentColor">
+            {/* Silhueta de Jesus com braços levantados */}
+            <circle cx="100" cy="45" r="25" />
+            <path d="M75 70 Q60 90 55 130 Q50 170 55 200 L65 200 Q70 170 75 140 L80 140 L80 260 L60 260 L60 280 L140 280 L140 260 L120 260 L120 140 L125 140 L130 170 Q135 200 140 200 L150 200 Q155 170 150 130 Q145 90 130 70 Z" />
+            {/* Raios ao redor */}
+            <line x1="100" y1="5" x2="100" y2="15" strokeWidth="2" opacity="0.5" />
+            <line x1="60" y1="15" x2="65" y2="22" strokeWidth="2" opacity="0.5" />
+            <line x1="140" y1="15" x2="135" y2="22" strokeWidth="2" opacity="0.5" />
+            <line x1="45" y1="45" x2="53" y2="45" strokeWidth="2" opacity="0.5" />
+            <line x1="155" y1="45" x2="147" y2="45" strokeWidth="2" opacity="0.5" />
+          </svg>
+        </div>
+        <div className="container max-w-6xl mx-auto px-4 relative z-10">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
               <img src="/images/GL%C3%93RIA_EM_LOUVORES-LOGO.png" alt="Glória em Louvores" className="h-20 object-contain mb-4" />
-              <p className="text-gray-500 text-sm">Levando a presença de Deus através da música. Uma família de fé que cresce a cada dia.</p>
+              <p className="text-white/60 text-sm">Levando a presença de Deus através da música. Uma família de fé que cresce a cada dia.</p>
             </div>
             <div>
               <h4 className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[2px] mb-4">Canal</h4>
-              <ul className="space-y-2 text-sm text-gray-500">
+              <ul className="space-y-2 text-sm text-white/60">
                 <li><a href="https://www.youtube.com/@gloriaemlouvores/videos" target="_blank" className="hover:text-[#D4AF37] transition-colors">Vídeos</a></li>
                 <li><a href="https://www.youtube.com/@gloriaemlouvores/playlists" target="_blank" className="hover:text-[#D4AF37] transition-colors">Playlists</a></li>
                 <li><a href="https://www.youtube.com/@gloriaemlouvores/shorts" target="_blank" className="hover:text-[#D4AF37] transition-colors">Shorts</a></li>
@@ -330,7 +344,7 @@ export default function Home() {
             </div>
             <div>
               <h4 className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[2px] mb-4">Categorias</h4>
-              <ul className="space-y-2 text-sm text-gray-500">
+              <ul className="space-y-2 text-sm text-white/60">
                 <li><a href="#adoracao" className="hover:text-[#D4AF37] transition-colors">Louvores de Adoração</a></li>
                 <li><a href="#oracao" className="hover:text-[#D4AF37] transition-colors">Músicas Para Orar</a></li>
                 <li><a href="#paz" className="hover:text-[#D4AF37] transition-colors">Louvores de Paz</a></li>
@@ -339,7 +353,7 @@ export default function Home() {
             </div>
             <div>
               <h4 className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[2px] mb-4">Comunidade</h4>
-              <ul className="space-y-2 text-sm text-gray-500">
+              <ul className="space-y-2 text-sm text-white/60">
                 <li><a href="/blog" className="hover:text-[#D4AF37] transition-colors">Blog</a></li>
                 <li><a href="#contato" className="hover:text-[#D4AF37] transition-colors">Pedidos de Oração</a></li>
                 <li><a href="#contato" className="hover:text-[#D4AF37] transition-colors">Contato</a></li>
@@ -347,9 +361,9 @@ export default function Home() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-[#E8E4E0] pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm">© 2026 <a href="https://www.youtube.com/@gloriaemlouvores" target="_blank" className="text-[#D4AF37] hover:underline">Glória em Louvores</a>. Todos os direitos reservados.</p>
-            <div className="flex gap-6 text-sm text-gray-400">
+          <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-white/40 text-sm">© 2026 <a href="https://www.youtube.com/@gloriaemlouvores" target="_blank" className="text-[#D4AF37] hover:underline">Glória em Louvores</a>. Todos os direitos reservados.</p>
+            <div className="flex gap-6 text-sm text-white/40">
               <a href="#" className="hover:text-[#D4AF37] transition-colors">Política de Privacidade</a>
               <a href="#" className="hover:text-[#D4AF37] transition-colors">Termos de Uso</a>
             </div>
