@@ -308,18 +308,11 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative border-t border-[#E8E4E0] py-10 sm:py-12 bg-[#1a1f3a] overflow-hidden">
-        {/* Silhueta de Jesus */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <svg viewBox="0 0 100 140" className="h-[500px] w-auto text-white/[0.06]" fill="currentColor">
-            {/* Cabeça */}
-            <circle cx="50" cy="18" r="12" />
-            {/* Corpo com braços levantados */}
-            <path d="M38 30 C25 45 15 65 12 90 L18 90 C20 70 25 55 30 45 L35 45 L35 120 L28 120 L28 132 L72 132 L72 120 L65 120 L65 45 L70 45 C75 55 80 70 82 90 L88 90 C85 65 75 45 62 30 Z" />
-            {/* Braços */}
-            <path d="M38 30 C30 25 20 22 10 25 C15 30 25 38 38 42 Z" />
-            <path d="M62 30 C70 25 80 22 90 25 C85 30 75 38 62 42 Z" />
-          </svg>
+      <footer className="relative py-10 sm:py-12 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img src="/images/footer-jesus.jpg" alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-black/70" />
         </div>
         <div className="container max-w-6xl mx-auto px-4 relative z-10">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
