@@ -8,12 +8,12 @@ import VideoCarousel from "@/components/VideoCarousel";
 import PsalmsCarousel from "@/components/PsalmsCarousel";
 
 const categories = [
-  { icon: <Sun className="w-8 h-8" />, title: "Louvores de Adoração", desc: "Momentos intensos de presença de Deus", color: "from-amber-50 to-orange-50", link: "https://www.youtube.com/results?search_query=louvor+adoração+gospel+gloria+em+louvores" },
-  { icon: <BookOpen className="w-8 h-8" />, title: "Louvores Para Orar", desc: "Músicas que abrem os céus sobre sua vida", color: "from-blue-50 to-indigo-50", link: "https://www.youtube.com/results?search_query=louvor+para+orar+gospel+gloria+em+louvores" },
-  { icon: <Heart className="w-8 h-8" />, title: "Louvores de Paz", desc: "Tranquilidade e descanso em Deus", color: "from-green-50 to-emerald-50", link: "https://www.youtube.com/results?search_query=louvor+paz+gospel+gloria+em+louvores" },
-  { icon: <Star className="w-8 h-8" />, title: "Louvores de Fé", desc: "Fortaleça sua fé e crê nos milagres", color: "from-yellow-50 to-amber-50", link: "https://www.youtube.com/results?search_query=louvor+fé+miracles+gospel+gloria+em+louvores" },
-  { icon: <Shield className="w-8 h-8" />, title: "Louvores de Proteção", desc: "Cobertura divina sobre sua família", color: "from-purple-50 to-violet-50", link: "https://www.youtube.com/results?search_query=louvor+proteção+gospel+gloria+em+louvores" },
-  { icon: <Moon className="w-8 h-8" />, title: "Louvores Para Dormir", desc: "Descanse na presença do Senhor", color: "from-indigo-50 to-blue-50", link: "https://www.youtube.com/results?search_query=louvor+dormir+descanso+gospel+gloria+em+louvores" },
+  { icon: <Sun className="w-8 h-8" />, title: "Louvores de Adoração", desc: "Momentos intensos de presença de Deus", color: "from-amber-50 to-orange-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=adoração" },
+  { icon: <BookOpen className="w-8 h-8" />, title: "Louvores Para Orar", desc: "Músicas que abrem os céus sobre sua vida", color: "from-blue-50 to-indigo-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=orar" },
+  { icon: <Heart className="w-8 h-8" />, title: "Louvores de Paz", desc: "Tranquilidade e descanso em Deus", color: "from-green-50 to-emerald-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=paz" },
+  { icon: <Star className="w-8 h-8" />, title: "Louvores de Fé", desc: "Fortaleça sua fé e crê nos milagres", color: "from-yellow-50 to-amber-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=fé" },
+  { icon: <Shield className="w-8 h-8" />, title: "Louvores de Proteção", desc: "Cobertura divina sobre sua família", color: "from-purple-50 to-violet-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=proteção" },
+  { icon: <Moon className="w-8 h-8" />, title: "Louvores Para Dormir", desc: "Descanse na presença do Senhor", color: "from-indigo-50 to-blue-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=dormir" },
 ];
 
 export default function Home() {
