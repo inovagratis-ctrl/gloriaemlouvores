@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Youtube, BookOpen, Heart, Shield, Moon, Sun, Music, Star, Send, Shuffle, Clock, Award } from "lucide-react";
+import { Youtube, BookOpen, Heart, Shield, Moon, Sun, Music, Star, Send, Shuffle, Clock, Award, Smartphone } from "lucide-react";
 import { useData, shuffleArray } from "@/contexts/DataContext";
 import Navbar from "@/components/Navbar";
 import VideoCarousel from "@/components/VideoCarousel";
@@ -154,6 +154,50 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SHORTS */}
+      <section className="py-16 sm:py-24 bg-white">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-[#FF0000]/10 rounded-full px-4 py-1.5 mb-4">
+              <Smartphone className="w-4 h-4 text-[#FF0000]" />
+              <span className="text-[#FF0000] text-sm font-semibold">YouTube Shorts</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-4">Momentos de <span className="text-[#FF0000]">fé</span></h2>
+            <p className="text-gray-500 max-w-xl mx-auto">Clipes curtos que tocam o coração — perfeitos para compartilhar aPalavra</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            {[
+              { id: "pFyRfz7K9bY", title: "Louvor Moment" },
+              { id: "8Xs0X3X3X3Y", title: "Oração Rápida" },
+              { id: "Y3Xs0X3X3XZ", title: "Versículo" },
+              { id: "Z3Xs0X3X3XA", title: "Adoração" },
+              { id: "A3Xs0X3X3XB", title: "Fé" },
+              { id: "B3Xs0X3X3XC", title: "Paz" },
+            ].map((short) => (
+              <a key={short.id} href="https://www.youtube.com/@gloriaemlouvores/shorts" target="_blank" rel="noopener noreferrer" className="group">
+                <div className="relative aspect-[9/16] rounded-2xl overflow-hidden bg-gradient-to-br from-[#1a1f3a] to-[#0f0f0f] border-2 border-transparent hover:border-[#FF0000] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-[#FF0000] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-[#FF0000]/30">
+                      <Youtube className="w-8 h-8 text-white" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+                    <p className="text-white text-xs font-semibold truncate">{short.title}</p>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Button asChild variant="outline" size="lg" className="border-[#FF0000] text-[#FF0000] hover:bg-[#FF0000] hover:text-white gap-2">
+              <a href="https://www.youtube.com/@gloriaemlouvores/shorts" target="_blank" rel="noopener noreferrer">
+                <Smartphone className="w-5 h-5" /> Ver todos os Shorts
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Categories */}
       <section className="py-16 sm:py-24 bg-white">
         <div className="container max-w-6xl mx-auto px-4">
@@ -185,8 +229,8 @@ export default function Home() {
                 <BookOpen className="w-4 h-4 text-[#D4AF37]" />
                 <span className="text-[#D4AF37] text-sm font-semibold">Blog</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-4">Reflexões de <span className="text-[#D4AF37]">fé</span></h2>
-              <p className="text-gray-500 max-w-xl mx-auto">Artigos sobre louvor, oração e vida cristã para fortalecer sua jornada</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-4">Reflexões de fé</h2>
+              <p className="text-gray-500 max-w-xl mx-auto">Artigos sobre louvor, oração e vida cristã</p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {blogPosts.slice(0, 3).map((post) => (
@@ -209,7 +253,7 @@ export default function Home() {
             <div className="text-center mt-10">
               <a href="/blog">
                 <Button variant="outline" size="lg" className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white gap-2 px-8">
-                  <BookOpen className="w-5 h-5" /> Ver todos os artigos
+                  <BookOpen className="w-5 h-5" /> Ver mais reflexões
                 </Button>
               </a>
             </div>

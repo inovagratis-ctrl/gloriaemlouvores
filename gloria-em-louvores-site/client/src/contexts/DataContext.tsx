@@ -17,6 +17,7 @@ export interface BlogPost {
   title: string;
   desc: string;
   content: string;
+  image: string;
   date: string;
 }
 
@@ -55,9 +56,9 @@ const defaultVideos: Video[] = [
 ];
 
 const defaultBlogPosts: BlogPost[] = [
-  { id: '1', icon: '🔥', tag: 'Adoração', title: 'O Poder do Louvor na Hora da Batalha', desc: 'Quando Jó cantou no meio do sofrimento, algo se quebrou nos céus.', content: '', date: '21 de julho de 2026' },
-  { id: '2', icon: '🙏', tag: 'Oração', title: 'Como Orar com Louvor e Mudar Situações', desc: 'A combinação de oração e louvor é devastadora.', content: '', date: '18 de julho de 2026' },
-  { id: '3', icon: '🕊️', tag: 'Paz', title: '7 Louvores Que Trazem Paz Para o Coração', desc: 'A ansiedade não convive com a presença de Deus.', content: '', date: '15 de julho de 2026' },
+  { id: '1', icon: '🔥', tag: 'Adoração', title: 'O Poder do Louvor na Hora da Batalha', desc: 'Quando Jó cantou no meio do sofrimento, algo se quebrou nos céus.', content: '', image: '', date: '21 de julho de 2026' },
+  { id: '2', icon: '🙏', tag: 'Oração', title: 'Como Orar com Louvor e Mudar Situações', desc: 'A combinação de oração e louvor é devastadora.', content: '', image: '', date: '18 de julho de 2026' },
+  { id: '3', icon: '🕊️', tag: 'Paz', title: '7 Louvores Que Trazem Paz Para o Coração', desc: 'A ansiedade não convive com a presença de Deus.', content: '', image: '', date: '15 de julho de 2026' },
 ];
 
 function shuffleArray<T>(array: T[]): T[] {

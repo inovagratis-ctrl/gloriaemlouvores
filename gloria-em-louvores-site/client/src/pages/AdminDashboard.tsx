@@ -22,7 +22,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const [showNewPost, setShowNewPost] = useState(false);
 
   const [videoForm, setVideoForm] = useState({ youtubeId: '', title: '', views: '', category: 'adoracao', featured: false, date: new Date().toISOString().split('T')[0] });
-  const [postForm, setPostForm] = useState({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', date: new Date().toLocaleDateString('pt-BR') });
+  const [postForm, setPostForm] = useState({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', image: '', date: new Date().toLocaleDateString('pt-BR') });
 
   const unreadCount = prayerRequests.filter(r => !r.read).length;
 
@@ -55,7 +55,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
 
   const startEditPost = (post: BlogPost) => {
     setEditingPost(post);
-    setPostForm({ icon: post.icon, tag: post.tag, title: post.title, desc: post.desc, content: post.content, date: post.date });
+    setPostForm({ icon: post.icon, tag: post.tag, title: post.title, desc: post.desc, content: post.content, image: post.image || '', date: post.date });
   };
 
   return (
@@ -181,7 +181,22 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   </div>
                   <div><Label>Título</Label><Input placeholder="Título do artigo" value={postForm.title} onChange={e => setPostForm({ ...postForm, title: e.target.value })} /></div>
                   <div><Label>Resumo</Label><Input placeholder="Breve descrição" value={postForm.desc} onChange={e => setPostForm({ ...postForm, desc: e.target.value })} /></div>
-                  <div><Label>Conteúdo</Label><Textarea placeholder="Conteúdo completo do artigo..." rows={6} value={postForm.content} onChange={e => setPostForm({ ...postForm, content: e.target.value })} /></div>
+                  <div>
+                    <Label>Imagem de Capa (URL)</Label>
+                    <Input placeholder="https://exemplo.com/imagem.jpg" value={postForm.image} onChange={e => setPostForm({ ...postForm, image: e.target.value })} />
+                    {postForm.image && <img src={postForm.image} alt="Preview" className="mt-2 h-32 object-cover rounded-lg" />}
+                  </div>
+                  <div>
+                    <Label>Conteúdo (aceita HTML)</Label>
+                    <div className="text-xs text-gray-500 mb-1">Use &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;blockquote&gt;, &lt;img&gt;, &lt;a&gt;</div>
+                    <Textarea placeholder="<h2>Título da Seção</h2>&#10;<p>Conteúdo do artigo...</p>&#10;<blockquote>Citação bíblica</blockquote>&#10;<strong>Texto em negrito</strong>" rows={10} value={postForm.content} onChange={e => setPostForm({ ...postForm, content: e.target.value })} className="font-mono text-sm" />
+                    {postForm.content && (
+                      <div className="mt-2">
+                        <Label className="text-xs text-gray-500">Preview:</Label>
+                        <div className="border rounded-lg p-4 mt-1 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: postForm.content }} />
+                      </div>
+                    )}
+                  </div>
                   <div className="flex gap-2">
                     <Button onClick={handleSavePost} className="bg-green-600 hover:bg-green-700 text-white gap-2"><Save className="w-4 h-4" /> Salvar</Button>
                     <Button variant="outline" onClick={() => { setShowNewPost(false); setEditingPost(null); }} className="gap-2"><X className="w-4 h-4" /> Cancelar</Button>
