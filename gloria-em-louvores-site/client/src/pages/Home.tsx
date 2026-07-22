@@ -167,18 +167,24 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
-              { id: "pFyRfz7K9bY", title: "Louvor Moment" },
-              { id: "8Xs0X3X3X3Y", title: "Oração Rápida" },
-              { id: "Y3Xs0X3X3XZ", title: "Versículo" },
-              { id: "Z3Xs0X3X3XA", title: "Adoração" },
-              { id: "A3Xs0X3X3XB", title: "Fé" },
-              { id: "B3Xs0X3X3XC", title: "Paz" },
-            ].map((short) => (
-              <a key={short.id} href="https://www.youtube.com/@gloriaemlouvores/shorts" target="_blank" rel="noopener noreferrer" className="group">
+              { id: "5MnuJP2ER1g", title: "Louvor Moment" },
+              { id: "5MnuJP2ER1g", title: "Oração Rápida" },
+              { id: "5MnuJP2ER1g", title: "Versículo" },
+              { id: "5MnuJP2ER1g", title: "Adoração" },
+              { id: "5MnuJP2ER1g", title: "Fé" },
+              { id: "5MnuJP2ER1g", title: "Paz" },
+            ].map((short, i) => (
+              <a key={i} href={`https://youtube.com/shorts/${short.id}`} target="_blank" rel="noopener noreferrer" className="group">
                 <div className="relative aspect-[9/16] rounded-2xl overflow-hidden bg-gradient-to-br from-[#1a1f3a] to-[#0f0f0f] border-2 border-transparent hover:border-[#FF0000] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 bg-[#FF0000] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-[#FF0000]/30">
-                      <Youtube className="w-8 h-8 text-white" />
+                  <img
+                    src={`https://img.youtube.com/vi/${short.id}/maxresdefault.jpg`}
+                    alt={short.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-14 h-14 bg-[#FF0000] rounded-full flex items-center justify-center shadow-lg shadow-[#FF0000]/30">
+                      <Youtube className="w-7 h-7 text-white" />
                     </div>
                   </div>
                   <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-3">
