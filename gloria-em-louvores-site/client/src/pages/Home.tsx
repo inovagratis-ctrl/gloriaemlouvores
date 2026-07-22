@@ -32,7 +32,7 @@ export default function Home() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
-            src="/images/hero.jpg"
+            src="/images/hero.png"
             alt="Adoração"
             className="w-full h-full object-cover"
           />
