@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import AdminLogin from "@/pages/AdminLogin";
@@ -44,7 +43,6 @@ function App() {
       <ThemeProvider defaultTheme="light">
         <DataProvider>
           <TooltipProvider>
-            <Toaster />
             <Router />
           </TooltipProvider>
         </DataProvider>
