@@ -140,11 +140,6 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
-        const updateId = resourceId || body.id;
-        if (updateId) {
-          const updated = await updateRow('blog_posts', updateId, body);
-          return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
-        }
         const { icon, tag, title, description, content, image, date, seoTitle, seoDescription, seoKeywords } = body;
         const result = await pool.query(`
           INSERT INTO blog_posts (icon, tag, title, description, content, image, date, seo_title, seo_description, seo_keywords)
@@ -152,6 +147,10 @@ export default async function handler(req: any, res: any) {
           RETURNING *
         `, [icon || '🎵', tag || 'Louvor', title, description || '', content || '', image || '', date || new Date().toISOString().split('T')[0], seoTitle || '', seoDescription || '', seoKeywords || '']);
         return sendJson(result.rows[0], 201);
+      }
+      if (req.method === 'PUT' && resourceId) {
+        const updated = await updateRow('blog_posts', resourceId, body);
+        return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
       }
       if (req.method === 'DELETE' && resourceId) {
         await pool.query('DELETE FROM blog_posts WHERE id = $1', [resourceId]);

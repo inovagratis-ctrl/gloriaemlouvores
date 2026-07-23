@@ -87,7 +87,10 @@ export default function BlogPost() {
 
           {/* Content */}
           {post.content ? (
-            <div className="prose prose-lg prose-headings:text-[#1a1f3a] prose-headings:font-bold prose-a:text-[#D4AF37] prose-blockquote:border-[#D4AF37] prose-blockquote:bg-[#F9F7F4] prose-blockquote:rounded-r-lg max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div
+              className="prose prose-lg prose-headings:text-[#1a1f3a] prose-headings:font-bold prose-a:text-[#D4AF37] prose-blockquote:border-[#D4AF37] prose-blockquote:bg-[#F9F7F4] prose-blockquote:rounded-r-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: post.content.replace(/className=/g, 'class=') }}
+            />
           ) : (
             <p className="text-gray-400 italic text-center py-8">Conteúdo completo em breve...</p>
           )}

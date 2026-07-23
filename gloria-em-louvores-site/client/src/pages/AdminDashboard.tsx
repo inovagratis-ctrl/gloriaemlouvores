@@ -194,7 +194,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
     reader.onload = (ev) => {
       const result = ev.target?.result as string;
       if (!result) return;
-      insertAtCursor(`<img src="${result}" alt="Imagem do artigo" className="w-full rounded-lg" />`);
+      insertAtCursor(`<img src="${result}" alt="Imagem do artigo" class="w-full rounded-lg" />`);
     };
     reader.readAsDataURL(file);
     e.target.value = '';
@@ -207,7 +207,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       if (!value) return;
       if (tag === 'a') {
         const text = prompt('Texto do link:');
-        insertion = `<a href="${value}" target="_blank" className="text-[#D4AF37] underline">${text || value}</a>`;
+        insertion = `<a href="${value}" target="_blank" class="text-[#D4AF37] underline">${text || value}</a>`;
       } else {
         insertion = `<${tag}>${value}</${tag}>`;
       }
@@ -227,7 +227,10 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
             <h1 className="text-xl font-bold text-[#1a1f3a]">Painel Admin</h1>
             {unreadCount > 0 && <span className="bg-[#FF0000] text-white text-xs px-2 py-1 rounded-full">{unreadCount} novo(s)</span>}
           </div>
-          <Button variant="outline" onClick={onLogout} size="sm">Sair</Button>
+          <div className="flex items-center gap-2">
+            <Link href="/admin/blog"><Button variant="outline" size="sm" className="gap-2"><FileText className="w-4 h-4" /> Blog Admin</Button></Link>
+            <Button variant="outline" onClick={onLogout} size="sm">Sair</Button>
+          </div>
         </div>
       </header>
 

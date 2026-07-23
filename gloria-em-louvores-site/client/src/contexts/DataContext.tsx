@@ -78,8 +78,14 @@ const DataContext = createContext<DataContextType | null>(null);
 const API_BASE = '/api';
 
 async function fetchAPI<T>(resource: string, options?: RequestInit, resourceId?: string): Promise<T> {
-  const idParam = resourceId ? `&id=${resourceId}` : '';
-  const url = resource.startsWith('/') ? `${API_BASE}${resource}` : `${API_BASE}?resource=${resource}${idParam}`;
+  let url: string;
+  if (resource.startsWith('/')) {
+    url = `${API_BASE}${resource}`;
+  } else if (resourceId) {
+    url = `${API_BASE}/${resource}/${resourceId}`;
+  } else {
+    url = `${API_BASE}/${resource}`;
+  }
   const res = await fetch(url, {
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     ...options,

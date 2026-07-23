@@ -3,6 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
+import AdminBlog from "@/pages/AdminBlog";
 import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
 import ContactForm from "@/pages/Contact";
@@ -27,11 +28,20 @@ function AdminPage() {
   return isLoggedIn ? <AdminDashboard onLogout={handleLogout} /> : <AdminLogin onLogin={() => setIsLoggedIn(true)} />;
 }
 
+function AdminBlogPage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('gloria-admin-auth') === 'true';
+  });
+
+  return isLoggedIn ? <AdminBlog /> : <AdminLogin onLogin={() => setIsLoggedIn(true)} />;
+}
+
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/admin" component={AdminPage} />
+      <Route path="/admin/blog" component={AdminBlogPage} />
       <Route path="/blog" component={BlogList} />
       <Route path="/blog/:id" component={BlogPost} />
       <Route path="/contato" component={ContactForm} />
