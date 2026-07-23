@@ -105,8 +105,9 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
-        if (resourceId) {
-          const updated = await updateRow('videos', resourceId, body);
+        const updateId = resourceId || body.id;
+        if (updateId) {
+          const updated = await updateRow('videos', updateId, body);
           return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
         }
         const { youtubeId, title, views, category, featured, date } = body;
@@ -135,8 +136,9 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
-        if (resourceId) {
-          const updated = await updateRow('blog_posts', resourceId, body);
+        const updateId = resourceId || body.id;
+        if (updateId) {
+          const updated = await updateRow('blog_posts', updateId, body);
           return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
         }
         const { icon, tag, title, description, content, image, date, seoTitle, seoDescription, seoKeywords } = body;
@@ -166,8 +168,9 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
-        if (resourceId) {
-          const updated = await updateRow('psalms', resourceId, body);
+        const updateId = resourceId || body.id;
+        if (updateId) {
+          const updated = await updateRow('psalms', updateId, body);
           return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
         }
         const { text, reference } = body;
@@ -193,8 +196,9 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
-        if (resourceId) {
-          const updated = await updateRow('shorts', resourceId, body);
+        const updateId = resourceId || body.id;
+        if (updateId) {
+          const updated = await updateRow('shorts', updateId, body);
           return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
         }
         const { youtubeId, title } = body;
@@ -220,8 +224,9 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
-        if (resourceId) {
-          const updated = await updateRow('prayer_requests', resourceId, body);
+        const updateId = resourceId || body.id;
+        if (updateId) {
+          const updated = await updateRow('prayer_requests', updateId, body);
           return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
         }
         const { name, email, message, type } = body;
