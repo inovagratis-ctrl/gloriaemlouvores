@@ -77,8 +77,9 @@ const DataContext = createContext<DataContextType | null>(null);
 
 const API_BASE = '/api';
 
-async function fetchAPI<T>(resource: string, options?: RequestInit): Promise<T> {
-  const url = resource.startsWith('/') ? `${API_BASE}${resource}` : `${API_BASE}?resource=${resource}`;
+async function fetchAPI<T>(resource: string, options?: RequestInit, resourceId?: string): Promise<T> {
+  const idParam = resourceId ? `&id=${resourceId}` : '';
+  const url = resource.startsWith('/') ? `${API_BASE}${resource}` : `${API_BASE}?resource=${resource}${idParam}`;
   const res = await fetch(url, {
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     ...options,
@@ -153,7 +154,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setVideos(prev => [newVideo, ...prev]);
   };
   const updateVideo = async (id: string, video: Partial<Video>) => {
-    await fetchAPI<Video>('videos', { method: 'POST', body: JSON.stringify({ ...video, id }) });
+    await fetchAPI<Video>('videos', { method: 'POST', body: JSON.stringify(video) }, id);
     setVideos(prev => prev.map(v => v.id === id ? { ...v, ...video } : v));
   };
   const deleteVideo = async (id: string) => {
@@ -171,7 +172,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setBlogPosts(prev => [newPost, ...prev]);
   };
   const updateBlogPost = async (id: string, post: Partial<BlogPost>) => {
-    await fetchAPI<BlogPost>('blog', { method: 'POST', body: JSON.stringify({ ...post, id }) });
+    await fetchAPI<BlogPost>('blog', { method: 'POST', body: JSON.stringify(post) }, id);
     setBlogPosts(prev => prev.map(p => p.id === id ? { ...p, ...post } : p));
   };
   const deleteBlogPost = async (id: string) => {
@@ -185,7 +186,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setPsalms(prev => [newPsalm, ...prev]);
   };
   const updatePsalm = async (id: string, psalm: Partial<Psalm>) => {
-    await fetchAPI<Psalm>('psalms', { method: 'POST', body: JSON.stringify({ ...psalm, id }) });
+    await fetchAPI<Psalm>('psalms', { method: 'POST', body: JSON.stringify(psalm) }, id);
     setPsalms(prev => prev.map(p => p.id === id ? { ...p, ...psalm } : p));
   };
   const deletePsalm = async (id: string) => {
@@ -199,7 +200,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setShorts(prev => [newShort, ...prev]);
   };
   const updateShort = async (id: string, short: Partial<Short>) => {
-    await fetchAPI<Short>('shorts', { method: 'POST', body: JSON.stringify({ ...short, id }) });
+    await fetchAPI<Short>('shorts', { method: 'POST', body: JSON.stringify(short) }, id);
     setShorts(prev => prev.map(s => s.id === id ? { ...s, ...short } : s));
   };
   const deleteShort = async (id: string) => {
@@ -213,7 +214,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setPrayerRequests(prev => [newRequest, ...prev]);
   };
   const markAsRead = async (id: string) => {
-    await fetchAPI('requests', { method: 'POST', body: JSON.stringify({ read: true, id }) });
+    await fetchAPI('requests', { method: 'POST', body: JSON.stringify({ read: true }) }, id);
     setPrayerRequests(prev => prev.map(r => r.id === id ? { ...r, read: true } : r));
   };
   const deletePrayerRequest = async (id: string) => {
