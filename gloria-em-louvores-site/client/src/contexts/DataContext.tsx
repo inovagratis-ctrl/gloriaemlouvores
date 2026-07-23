@@ -153,7 +153,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setVideos(prev => [newVideo, ...prev]);
   };
   const updateVideo = async (id: string, video: Partial<Video>) => {
-    await apiCall(`/videos/${id}`, 'PATCH', video);
+    await apiCall(`/videos/${id}`, 'POST', video);
     setVideos(prev => prev.map(v => v.id === id ? { ...v, ...video } : v));
   };
   const deleteVideo = async (id: string) => {
@@ -171,7 +171,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setBlogPosts(prev => [newPost, ...prev]);
   };
   const updateBlogPost = async (id: string, post: Partial<BlogPost>) => {
-    await apiCall(`/blog/${id}`, 'PATCH', post);
+    await apiCall(`/blog/${id}`, 'POST', post);
     setBlogPosts(prev => prev.map(p => p.id === id ? { ...p, ...post } : p));
   };
   const deleteBlogPost = async (id: string) => {
@@ -185,7 +185,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setPsalms(prev => [newPsalm, ...prev]);
   };
   const updatePsalm = async (id: string, psalm: Partial<Psalm>) => {
-    await apiCall(`/psalms/${id}`, 'PATCH', psalm);
+    await apiCall(`/psalms/${id}`, 'POST', psalm);
     setPsalms(prev => prev.map(p => p.id === id ? { ...p, ...psalm } : p));
   };
   const deletePsalm = async (id: string) => {
@@ -199,7 +199,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setShorts(prev => [newShort, ...prev]);
   };
   const updateShort = async (id: string, short: Partial<Short>) => {
-    await apiCall(`/shorts/${id}`, 'PATCH', short);
+    await apiCall(`/shorts/${id}`, 'POST', short);
     setShorts(prev => prev.map(s => s.id === id ? { ...s, ...short } : s));
   };
   const deleteShort = async (id: string) => {
@@ -213,7 +213,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setPrayerRequests(prev => [newRequest, ...prev]);
   };
   const markAsRead = async (id: string) => {
-    await apiCall(`/requests/${id}`, 'PATCH', { read: true });
+    await apiCall(`/requests/${id}`, 'POST', { read: true });
     setPrayerRequests(prev => prev.map(r => r.id === id ? { ...r, read: true } : r));
   };
   const deletePrayerRequest = async (id: string) => {

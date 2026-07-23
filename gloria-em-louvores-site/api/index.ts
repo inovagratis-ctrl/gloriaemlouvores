@@ -105,16 +105,16 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
+        if (resourceId) {
+          const updated = await updateRow('videos', resourceId, body);
+          return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
+        }
         const { youtubeId, title, views, category, featured, date } = body;
         const result = await pool.query(
           'INSERT INTO videos (youtube_id, title, views, category, featured, date) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
           [youtubeId, title, views || '', category || 'adoracao', featured || false, date || new Date().toISOString().split('T')[0]]
         );
         return sendJson(result.rows[0], 201);
-      }
-      if (req.method === 'PATCH' && resourceId) {
-        const updated = await updateRow('videos', resourceId, body);
-        return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
       }
       if (req.method === 'DELETE' && resourceId) {
         await pool.query('DELETE FROM videos WHERE id = $1', [resourceId]);
@@ -135,6 +135,10 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
+        if (resourceId) {
+          const updated = await updateRow('blog_posts', resourceId, body);
+          return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
+        }
         const { icon, tag, title, description, content, image, date, seoTitle, seoDescription, seoKeywords } = body;
         const result = await pool.query(`
           INSERT INTO blog_posts (icon, tag, title, description, content, image, date, seo_title, seo_description, seo_keywords)
@@ -142,10 +146,6 @@ export default async function handler(req: any, res: any) {
           RETURNING *
         `, [icon || '🎵', tag || 'Louvor', title, description || '', content || '', image || '', date || new Date().toISOString().split('T')[0], seoTitle || '', seoDescription || '', seoKeywords || '']);
         return sendJson(result.rows[0], 201);
-      }
-      if (req.method === 'PATCH' && resourceId) {
-        const updated = await updateRow('blog_posts', resourceId, body);
-        return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
       }
       if (req.method === 'DELETE' && resourceId) {
         await pool.query('DELETE FROM blog_posts WHERE id = $1', [resourceId]);
@@ -166,13 +166,13 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
+        if (resourceId) {
+          const updated = await updateRow('psalms', resourceId, body);
+          return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
+        }
         const { text, reference } = body;
         const result = await pool.query('INSERT INTO psalms (text, reference) VALUES ($1, $2) RETURNING *', [text, reference]);
         return sendJson(result.rows[0], 201);
-      }
-      if (req.method === 'PATCH' && resourceId) {
-        const updated = await updateRow('psalms', resourceId, body);
-        return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
       }
       if (req.method === 'DELETE' && resourceId) {
         await pool.query('DELETE FROM psalms WHERE id = $1', [resourceId]);
@@ -193,13 +193,13 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
+        if (resourceId) {
+          const updated = await updateRow('shorts', resourceId, body);
+          return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
+        }
         const { youtubeId, title } = body;
         const result = await pool.query('INSERT INTO shorts (youtube_id, title) VALUES ($1, $2) RETURNING *', [youtubeId, title]);
         return sendJson(result.rows[0], 201);
-      }
-      if (req.method === 'PATCH' && resourceId) {
-        const updated = await updateRow('shorts', resourceId, body);
-        return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
       }
       if (req.method === 'DELETE' && resourceId) {
         await pool.query('DELETE FROM shorts WHERE id = $1', [resourceId]);
@@ -220,13 +220,13 @@ export default async function handler(req: any, res: any) {
         return sendJson(result.rows);
       }
       if (req.method === 'POST') {
+        if (resourceId) {
+          const updated = await updateRow('prayer_requests', resourceId, body);
+          return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
+        }
         const { name, email, message, type } = body;
         const result = await pool.query('INSERT INTO prayer_requests (name, email, message, type) VALUES ($1, $2, $3, $4) RETURNING *', [name, email, message, type || 'oracao']);
         return sendJson(result.rows[0], 201);
-      }
-      if (req.method === 'PATCH' && resourceId) {
-        const updated = await updateRow('prayer_requests', resourceId, body);
-        return updated ? sendJson(updated) : sendJson({ error: 'Not found' }, 404);
       }
       if (req.method === 'DELETE' && resourceId) {
         await pool.query('DELETE FROM prayer_requests WHERE id = $1', [resourceId]);
