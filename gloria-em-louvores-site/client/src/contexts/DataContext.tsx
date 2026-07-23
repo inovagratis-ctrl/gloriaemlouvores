@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export interface Video {
   id: string;
@@ -15,20 +15,13 @@ export interface BlogPost {
   icon: string;
   tag: string;
   title: string;
-  desc: string;
+  description: string;
   content: string;
   image: string;
   date: string;
-}
-
-export interface PrayerRequest {
-  id: string;
-  name: string;
-  email: string;
-  message: string;
-  type: 'oracao' | 'louvor' | 'contato';
-  date: string;
-  read: boolean;
+  seoTitle: string;
+  seoDescription: string;
+  seoKeywords: string;
 }
 
 export interface Psalm {
@@ -43,122 +36,202 @@ export interface Short {
   title: string;
 }
 
+export interface PrayerRequest {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  type: 'oracao' | 'louvor' | 'contato';
+  date: string;
+  read: boolean;
+}
+
 interface DataContextType {
   videos: Video[];
   blogPosts: BlogPost[];
-  prayerRequests: PrayerRequest[];
   psalms: Psalm[];
   shorts: Short[];
-  addVideo: (video: Omit<Video, 'id'>) => void;
-  updateVideo: (id: string, video: Partial<Video>) => void;
-  deleteVideo: (id: string) => void;
-  toggleFeatured: (id: string) => void;
-  addBlogPost: (post: Omit<BlogPost, 'id'>) => void;
-  updateBlogPost: (id: string, post: Partial<BlogPost>) => void;
-  deleteBlogPost: (id: string) => void;
-  addPsalm: (psalm: Omit<Psalm, 'id'>) => void;
-  updatePsalm: (id: string, psalm: Partial<Psalm>) => void;
-  deletePsalm: (id: string) => void;
-  addShort: (short: Omit<Short, 'id'>) => void;
-  updateShort: (id: string, short: Partial<Short>) => void;
-  deleteShort: (id: string) => void;
-  addPrayerRequest: (request: Omit<PrayerRequest, 'id' | 'date' | 'read'>) => void;
-  markAsRead: (id: string) => void;
-  deletePrayerRequest: (id: string) => void;
+  prayerRequests: PrayerRequest[];
+  loading: boolean;
+  error: string | null;
+  addVideo: (video: Omit<Video, 'id'>) => Promise<void>;
+  updateVideo: (id: string, video: Partial<Video>) => Promise<void>;
+  deleteVideo: (id: string) => Promise<void>;
+  toggleFeatured: (id: string) => Promise<void>;
+  addBlogPost: (post: Omit<BlogPost, 'id'>) => Promise<void>;
+  updateBlogPost: (id: string, post: Partial<BlogPost>) => Promise<void>;
+  deleteBlogPost: (id: string) => Promise<void>;
+  addPsalm: (psalm: Omit<Psalm, 'id'>) => Promise<void>;
+  updatePsalm: (id: string, psalm: Partial<Psalm>) => Promise<void>;
+  deletePsalm: (id: string) => Promise<void>;
+  addShort: (short: Omit<Short, 'id'>) => Promise<void>;
+  updateShort: (id: string, short: Partial<Short>) => Promise<void>;
+  deleteShort: (id: string) => Promise<void>;
+  addPrayerRequest: (request: Omit<PrayerRequest, 'id' | 'date' | 'read'>) => Promise<void>;
+  markAsRead: (id: string) => Promise<void>;
+  deletePrayerRequest: (id: string) => Promise<void>;
+  refreshData: () => Promise<void>;
 }
 
-const DataContext = createContext<DataContextType | undefined>(undefined);
+const DataContext = createContext<DataContextType | null>(null);
 
-const defaultVideos: Video[] = [
-  { id: '1', youtubeId: 'MF8p-aj16Zg', title: 'O SOM DO MILAGRE | 12 Louvores Para Quem Precisa de um Milagre', views: '5.6K views', category: 'adoracao', featured: true, date: '2026-07-20' },
-  { id: '2', youtubeId: 'TvNd8KgQRGc', title: 'TRONO DE DEUS | 70 Louvores Para Afastar Todo Mal', views: 'Louvores poderosos', category: 'protecao', featured: true, date: '2026-07-18' },
-  { id: '3', youtubeId: 'vD6vp5AJ4bU', title: 'Louvor Gospel Worship Emocionante 2026', views: 'Worship poderoso', category: 'adoracao', featured: false, date: '2026-07-15' },
-];
+const API_BASE = '/api';
 
-const defaultBlogPosts: BlogPost[] = [
-  { id: '1', icon: '🔥', tag: 'Adoração', title: 'O Poder do Louvor na Hora da Batalha', desc: 'Quando Jó cantou no meio do sofrimento, algo se quebrou nos céus.', content: '', image: '', date: '21 de julho de 2026' },
-  { id: '2', icon: '🙏', tag: 'Oração', title: 'Como Orar com Louvor e Mudar Situações', desc: 'A combinação de oração e louvor é devastadora.', content: '', image: '', date: '18 de julho de 2026' },
-  { id: '3', icon: '🕊️', tag: 'Paz', title: '7 Louvores Que Trazem Paz Para o Coração', desc: 'A ansiedade não convive com a presença de Deus.', content: '', image: '', date: '15 de julho de 2026' },
-];
+async function fetchAPI<T>(resource: string, options?: RequestInit): Promise<T> {
+  const url = resource.startsWith('/') ? `${API_BASE}${resource}` : `${API_BASE}?resource=${resource}`;
+  const res = await fetch(url, {
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    ...options,
+  });
+  if (!res.ok) throw new Error(await res.text());
+  const data = await res.json();
+  return transformKeys(data) as T;
+}
 
-const defaultPsalms: Psalm[] = [
-  { id: '1', text: 'Louvarei ao Senhor em todo o tempo; o seu louvor estará continuamente na minha boca.', reference: 'Salmo 34:1' },
-  { id: '2', text: 'O Senhor é o meu pastor; nada me faltará.', reference: 'Salmo 23:1' },
-  { id: '3', text: 'Em ti, ó Senhor, eu refugio; jamais ficarei confundido; livra-me e livra-me na tua justiça.', reference: 'Salmo 31:1' },
-];
+async function apiCall<T>(path: string, method: string, body?: any): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (method === 'DELETE') return undefined as T;
+  if (!res.ok) throw new Error(await res.text());
+  const data = await res.json();
+  return transformKeys(data) as T;
+}
 
-const defaultShorts: Short[] = [
-  { id: '1', youtubeId: '5MnuJP2ER1g', title: 'Louvor Moment' },
-];
-
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+function transformKeys(obj: any): any {
+  if (Array.isArray(obj)) return obj.map(transformKeys);
+  if (obj && typeof obj === 'object') {
+    const transformed: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+      transformed[camelKey] = transformKeys(value);
+    }
+    return transformed;
   }
-  return shuffled;
+  return obj;
 }
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const [videos, setVideos] = useState<Video[]>(() => {
-    const saved = localStorage.getItem('gloria-videos');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      return parsed.map((v: any) => ({ ...v, featured: v.featured ?? false, date: v.date ?? '' }));
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [psalms, setPsalms] = useState<Psalm[]>([]);
+  const [shorts, setShorts] = useState<Short[]>([]);
+  const [prayerRequests, setPrayerRequests] = useState<PrayerRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const refreshData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [v, b, p, s, r] = await Promise.all([
+        fetchAPI<Video[]>('videos'),
+        fetchAPI<BlogPost[]>('blog'),
+        fetchAPI<Psalm[]>('psalms'),
+        fetchAPI<Short[]>('shorts'),
+        fetchAPI<PrayerRequest[]>('requests'),
+      ]);
+      setVideos(v);
+      setBlogPosts(b);
+      setPsalms(p);
+      setShorts(s);
+      setPrayerRequests(r);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erro ao carregar dados');
+    } finally {
+      setLoading(false);
     }
-    return defaultVideos;
-  });
+  };
 
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(() => {
-    const saved = localStorage.getItem('gloria-blog');
-    return saved ? JSON.parse(saved) : defaultBlogPosts;
-  });
+  useEffect(() => { refreshData(); }, []);
 
-  const [prayerRequests, setPrayerRequests] = useState<PrayerRequest[]>(() => {
-    const saved = localStorage.getItem('gloria-requests');
-    return saved ? JSON.parse(saved) : [];
-  });
+  // Videos
+  const addVideo = async (video: Omit<Video, 'id'>) => {
+    const newVideo = await fetchAPI<Video>('videos', { method: 'POST', body: JSON.stringify(video) });
+    setVideos(prev => [newVideo, ...prev]);
+  };
+  const updateVideo = async (id: string, video: Partial<Video>) => {
+    await apiCall(`/videos/${id}`, 'PATCH', video);
+    setVideos(prev => prev.map(v => v.id === id ? { ...v, ...video } : v));
+  };
+  const deleteVideo = async (id: string) => {
+    await apiCall(`/videos/${id}`, 'DELETE');
+    setVideos(prev => prev.filter(v => v.id !== id));
+  };
+  const toggleFeatured = async (id: string) => {
+    const video = videos.find(v => v.id === id);
+    if (video) await updateVideo(id, { featured: !video.featured });
+  };
 
-  const [psalms, setPsalms] = useState<Psalm[]>(() => {
-    const saved = localStorage.getItem('gloria-psalms');
-    return saved ? JSON.parse(saved) : defaultPsalms;
-  });
+  // Blog Posts
+  const addBlogPost = async (post: Omit<BlogPost, 'id'>) => {
+    const newPost = await fetchAPI<BlogPost>('blog', { method: 'POST', body: JSON.stringify(post) });
+    setBlogPosts(prev => [newPost, ...prev]);
+  };
+  const updateBlogPost = async (id: string, post: Partial<BlogPost>) => {
+    await apiCall(`/blog/${id}`, 'PATCH', post);
+    setBlogPosts(prev => prev.map(p => p.id === id ? { ...p, ...post } : p));
+  };
+  const deleteBlogPost = async (id: string) => {
+    await apiCall(`/blog/${id}`, 'DELETE');
+    setBlogPosts(prev => prev.filter(p => p.id !== id));
+  };
 
-  const [shorts, setShorts] = useState<Short[]>(() => {
-    const saved = localStorage.getItem('gloria-shorts');
-    return saved ? JSON.parse(saved) : defaultShorts;
-  });
+  // Psalms
+  const addPsalm = async (psalm: Omit<Psalm, 'id'>) => {
+    const newPsalm = await fetchAPI<Psalm>('psalms', { method: 'POST', body: JSON.stringify(psalm) });
+    setPsalms(prev => [newPsalm, ...prev]);
+  };
+  const updatePsalm = async (id: string, psalm: Partial<Psalm>) => {
+    await apiCall(`/psalms/${id}`, 'PATCH', psalm);
+    setPsalms(prev => prev.map(p => p.id === id ? { ...p, ...psalm } : p));
+  };
+  const deletePsalm = async (id: string) => {
+    await apiCall(`/psalms/${id}`, 'DELETE');
+    setPsalms(prev => prev.filter(p => p.id !== id));
+  };
 
-  useEffect(() => { localStorage.setItem('gloria-videos', JSON.stringify(videos)); }, [videos]);
-  useEffect(() => { localStorage.setItem('gloria-blog', JSON.stringify(blogPosts)); }, [blogPosts]);
-  useEffect(() => { localStorage.setItem('gloria-requests', JSON.stringify(prayerRequests)); }, [prayerRequests]);
-  useEffect(() => { localStorage.setItem('gloria-psalms', JSON.stringify(psalms)); }, [psalms]);
-  useEffect(() => { localStorage.setItem('gloria-shorts', JSON.stringify(shorts)); }, [shorts]);
+  // Shorts
+  const addShort = async (short: Omit<Short, 'id'>) => {
+    const newShort = await fetchAPI<Short>('shorts', { method: 'POST', body: JSON.stringify(short) });
+    setShorts(prev => [newShort, ...prev]);
+  };
+  const updateShort = async (id: string, short: Partial<Short>) => {
+    await apiCall(`/shorts/${id}`, 'PATCH', short);
+    setShorts(prev => prev.map(s => s.id === id ? { ...s, ...short } : s));
+  };
+  const deleteShort = async (id: string) => {
+    await apiCall(`/shorts/${id}`, 'DELETE');
+    setShorts(prev => prev.filter(s => s.id !== id));
+  };
 
-  const addVideo = (video: Omit<Video, 'id'>) => setVideos(prev => [...prev, { ...video, id: Date.now().toString() }]);
-  const updateVideo = (id: string, video: Partial<Video>) => setVideos(prev => prev.map(v => v.id === id ? { ...v, ...video } : v));
-  const deleteVideo = (id: string) => setVideos(prev => prev.filter(v => v.id !== id));
-  const toggleFeatured = (id: string) => setVideos(prev => prev.map(v => v.id === id ? { ...v, featured: !v.featured } : v));
-
-  const addBlogPost = (post: Omit<BlogPost, 'id'>) => setBlogPosts(prev => [...prev, { ...post, id: Date.now().toString() }]);
-  const updateBlogPost = (id: string, post: Partial<BlogPost>) => setBlogPosts(prev => prev.map(p => p.id === id ? { ...p, ...post } : p));
-  const deleteBlogPost = (id: string) => setBlogPosts(prev => prev.filter(p => p.id !== id));
-
-  const addPrayerRequest = (request: Omit<PrayerRequest, 'id' | 'date' | 'read'>) => setPrayerRequests(prev => [...prev, { ...request, id: Date.now().toString(), date: new Date().toLocaleDateString('pt-BR'), read: false }]);
-  const markAsRead = (id: string) => setPrayerRequests(prev => prev.map(r => r.id === id ? { ...r, read: true } : r));
-  const deletePrayerRequest = (id: string) => setPrayerRequests(prev => prev.filter(r => r.id !== id));
-
-  const addPsalm = (psalm: Omit<Psalm, 'id'>) => setPsalms(prev => [...prev, { ...psalm, id: Date.now().toString() }]);
-  const updatePsalm = (id: string, psalm: Partial<Psalm>) => setPsalms(prev => prev.map(p => p.id === id ? { ...p, ...psalm } : p));
-  const deletePsalm = (id: string) => setPsalms(prev => prev.filter(p => p.id !== id));
-
-  const addShort = (short: Omit<Short, 'id'>) => setShorts(prev => [...prev, { ...short, id: Date.now().toString() }]);
-  const updateShort = (id: string, short: Partial<Short>) => setShorts(prev => prev.map(s => s.id === id ? { ...s, ...short } : s));
-  const deleteShort = (id: string) => setShorts(prev => prev.filter(s => s.id !== id));
+  // Prayer Requests
+  const addPrayerRequest = async (request: Omit<PrayerRequest, 'id' | 'date' | 'read'>) => {
+    const newRequest = await fetchAPI<PrayerRequest>('requests', { method: 'POST', body: JSON.stringify(request) });
+    setPrayerRequests(prev => [newRequest, ...prev]);
+  };
+  const markAsRead = async (id: string) => {
+    await apiCall(`/requests/${id}`, 'PATCH', { read: true });
+    setPrayerRequests(prev => prev.map(r => r.id === id ? { ...r, read: true } : r));
+  };
+  const deletePrayerRequest = async (id: string) => {
+    await apiCall(`/requests/${id}`, 'DELETE');
+    setPrayerRequests(prev => prev.filter(r => r.id !== id));
+  };
 
   return (
-    <DataContext.Provider value={{ videos, blogPosts, prayerRequests, psalms, shorts, addVideo, updateVideo, deleteVideo, toggleFeatured, addBlogPost, updateBlogPost, deleteBlogPost, addPsalm, updatePsalm, deletePsalm, addShort, updateShort, deleteShort, addPrayerRequest, markAsRead, deletePrayerRequest }}>
+    <DataContext.Provider value={{
+      videos, blogPosts, psalms, shorts, prayerRequests,
+      loading, error,
+      addVideo, updateVideo, deleteVideo, toggleFeatured,
+      addBlogPost, updateBlogPost, deleteBlogPost,
+      addPsalm, updatePsalm, deletePsalm,
+      addShort, updateShort, deleteShort,
+      addPrayerRequest, markAsRead, deletePrayerRequest,
+      refreshData
+    }}>
       {children}
     </DataContext.Provider>
   );
@@ -169,5 +242,3 @@ export function useData() {
   if (!context) throw new Error('useData must be used within DataProvider');
   return context;
 }
-
-export { shuffleArray };

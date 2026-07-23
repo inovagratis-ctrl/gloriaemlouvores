@@ -6,7 +6,7 @@ import { Music, Menu, X, Youtube, Home, BookOpen, Mail, Shield } from "lucide-re
 const navLinks = [
   { href: "/", label: "Início", icon: <Home className="w-4 h-4" /> },
   { href: "/blog", label: "Blog", icon: <BookOpen className="w-4 h-4" /> },
-  { href: "/#contato", label: "Contato", icon: <Mail className="w-4 h-4" /> },
+  { href: "/contato", label: "Contato", icon: <Mail className="w-4 h-4" /> },
 ];
 
 export default function Navbar() {

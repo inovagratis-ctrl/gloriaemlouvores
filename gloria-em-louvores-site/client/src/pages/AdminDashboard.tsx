@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useData, Video, BlogPost, Psalm, Short } from '@/contexts/DataContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,54 +26,96 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const [showNewShort, setShowNewShort] = useState(false);
 
   const [videoForm, setVideoForm] = useState({ youtubeId: '', title: '', views: '', category: 'adoracao', featured: false, date: new Date().toISOString().split('T')[0] });
-  const [postForm, setPostForm] = useState({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', image: '', date: new Date().toLocaleDateString('pt-BR') });
+  const [postForm, setPostForm] = useState({ icon: '🎵', tag: 'Louvor', title: '', description: '', content: '', image: '', date: new Date().toISOString().split('T')[0], seoTitle: '', seoDescription: '', seoKeywords: '' });
   const [psalmForm, setPsalmForm] = useState({ text: '', reference: '' });
   const [shortForm, setShortForm] = useState({ youtubeId: '', title: '' });
 
+  // Extract YouTube ID from various URL formats
+  const extractYouTubeId = (input: string): string => {
+    if (!input) return '';
+    // Already just an ID (11 chars)
+    if (input.length === 11 && !input.includes('/') && !input.includes('.')) return input;
+    // youtube.com/watch?v=ID
+    const watchMatch = input.match(/[?&]v=([^&]+)/);
+    if (watchMatch) return watchMatch[1];
+    // youtu.be/ID
+    const shortMatch = input.match(/youtu\.be\/([^?&]+)/);
+    if (shortMatch) return shortMatch[1];
+    // youtube.com/shorts/ID
+    const shortsMatch = input.match(/shorts\/([^?&]+)/);
+    if (shortsMatch) return shortsMatch[1];
+    // youtube.com/embed/ID
+    const embedMatch = input.match(/embed\/([^?&]+)/);
+    if (embedMatch) return embedMatch[1];
+    return input;
+  };
+
   const unreadCount = prayerRequests.filter(r => !r.read).length;
 
-  const handleSaveVideo = () => {
-    if (editingVideo) {
-      updateVideo(editingVideo.id, videoForm);
-      setEditingVideo(null);
-    } else {
-      addVideo(videoForm);
-      setShowNewVideo(false);
+  const handleSaveVideo = async () => {
+    try {
+      const youtubeId = extractYouTubeId(videoForm.youtubeId);
+      if (editingVideo) {
+        await updateVideo(editingVideo.id, { ...videoForm, youtubeId });
+        setEditingVideo(null);
+      } else {
+        await addVideo({ ...videoForm, youtubeId });
+        setShowNewVideo(false);
+      }
+      setVideoForm({ youtubeId: '', title: '', views: '', category: 'adoracao', featured: false, date: new Date().toISOString().split('T')[0] });
+    } catch (e) {
+      alert('Erro ao salvar vídeo: ' + (e instanceof Error ? e.message : String(e)));
     }
-    setVideoForm({ youtubeId: '', title: '', views: '', category: 'adoracao', featured: false, date: new Date().toISOString().split('T')[0] });
   };
 
-  const handleSavePost = () => {
-    if (editingPost) {
-      updateBlogPost(editingPost.id, postForm);
-      setEditingPost(null);
-    } else {
-      addBlogPost(postForm);
-      setShowNewPost(false);
+  const handleSavePost = async () => {
+    try {
+      const payload = {
+        ...postForm,
+        date: new Date().toISOString().split('T')[0],
+      };
+      if (editingPost) {
+        await updateBlogPost(editingPost.id, payload);
+        setEditingPost(null);
+      } else {
+        await addBlogPost(payload);
+        setShowNewPost(false);
+      }
+      setPostForm({ icon: '🎵', tag: 'Louvor', title: '', description: '', content: '', image: '', date: new Date().toISOString().split('T')[0], seoTitle: '', seoDescription: '', seoKeywords: '' });
+    } catch (e) {
+      alert('Erro ao salvar artigo: ' + (e instanceof Error ? e.message : String(e)));
     }
-    setPostForm({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', image: '', date: new Date().toLocaleDateString('pt-BR') });
   };
 
-  const handleSavePsalm = () => {
-    if (editingPsalm) {
-      updatePsalm(editingPsalm.id, psalmForm);
-      setEditingPsalm(null);
-    } else {
-      addPsalm(psalmForm);
-      setShowNewPsalm(false);
+  const handleSavePsalm = async () => {
+    try {
+      if (editingPsalm) {
+        await updatePsalm(editingPsalm.id, psalmForm);
+        setEditingPsalm(null);
+      } else {
+        await addPsalm(psalmForm);
+        setShowNewPsalm(false);
+      }
+      setPsalmForm({ text: '', reference: '' });
+    } catch (e) {
+      alert('Erro ao salvar salmo: ' + (e instanceof Error ? e.message : String(e)));
     }
-    setPsalmForm({ text: '', reference: '' });
   };
 
-  const handleSaveShort = () => {
-    if (editingShort) {
-      updateShort(editingShort.id, shortForm);
-      setEditingShort(null);
-    } else {
-      addShort(shortForm);
-      setShowNewShort(false);
+  const handleSaveShort = async () => {
+    try {
+      const youtubeId = extractYouTubeId(shortForm.youtubeId);
+      if (editingShort) {
+        await updateShort(editingShort.id, { ...shortForm, youtubeId });
+        setEditingShort(null);
+      } else {
+        await addShort({ ...shortForm, youtubeId });
+        setShowNewShort(false);
+      }
+      setShortForm({ youtubeId: '', title: '' });
+    } catch (e) {
+      alert('Erro ao salvar short: ' + (e instanceof Error ? e.message : String(e)));
     }
-    setShortForm({ youtubeId: '', title: '' });
   };
 
   const startEditVideo = (video: Video) => {
@@ -83,7 +125,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
 
   const startEditPost = (post: BlogPost) => {
     setEditingPost(post);
-    setPostForm({ icon: post.icon, tag: post.tag, title: post.title, desc: post.desc, content: post.content, image: post.image || '', date: post.date });
+    setPostForm({ icon: post.icon, tag: post.tag, title: post.title, description: post.description || '', content: post.content, image: post.image || '', date: post.date, seoTitle: post.seoTitle || '', seoDescription: post.seoDescription || '', seoKeywords: post.seoKeywords || '' });
   };
 
   const startEditPsalm = (psalm: Psalm) => {
@@ -96,14 +138,74 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
     setShortForm({ youtubeId: short.youtubeId, title: short.title });
   };
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const coverImageRef = useRef<HTMLInputElement>(null);
+  const contentImageRef = useRef<HTMLInputElement>(null);
+
+  const insertAtCursor = (insertion: string) => {
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      setPostForm(prev => ({ ...prev, content: prev.content + insertion }));
+      return;
+    }
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    setPostForm(prev => {
+      const newContent = prev.content.substring(0, start) + insertion + prev.content.substring(end);
+      return { ...prev, content: newContent };
+    });
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + insertion.length;
+    }, 0);
+  };
+
+  const handleCoverImage = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        const maxWidth = 800;
+        let { width, height } = img;
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        setPostForm(prev => ({ ...prev, image: canvas.toDataURL('image/jpeg', 0.8) }));
+      };
+      img.src = ev.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  }, []);
+
+  const handleContentImage = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const result = ev.target?.result as string;
+      if (!result) return;
+      insertAtCursor(`<img src="${result}" alt="Imagem do artigo" className="w-full rounded-lg" />`);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  }, [insertAtCursor]);
+
   const insertHTML = (tag: string, promptText?: string) => {
     let insertion = '';
     if (promptText) {
       const value = prompt(promptText);
       if (!value) return;
-      if (tag === 'img') {
-        insertion = `<img src="${value}" alt="Descrição" className="w-full rounded-lg" />`;
-      } else if (tag === 'a') {
+      if (tag === 'a') {
         const text = prompt('Texto do link:');
         insertion = `<a href="${value}" target="_blank" className="text-[#D4AF37] underline">${text || value}</a>`;
       } else {
@@ -112,7 +214,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
     } else {
       insertion = `<${tag}></${tag}>`;
     }
-    setPostForm(prev => ({ ...prev, content: prev.content + insertion }));
+    insertAtCursor(insertion);
   };
 
   return (
@@ -154,7 +256,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 <CardContent className="space-y-4">
                   <div>
                     <Label>ID do YouTube</Label>
-                    <Input placeholder="Ex: MF8p-aj16Zg" value={videoForm.youtubeId} onChange={e => setVideoForm({ ...videoForm, youtubeId: e.target.value })} />
+                    <Input placeholder="Ex: MF8p-aj16Zg ou URL completa" value={videoForm.youtubeId} onChange={e => setVideoForm({ ...videoForm, youtubeId: e.target.value })} onBlur={e => setVideoForm({ ...videoForm, youtubeId: extractYouTubeId(e.target.value) })} />
                   </div>
                   <div>
                     <Label>Título</Label>
@@ -225,7 +327,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
           <TabsContent value="blog">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-[#1a1f3a]">Blog</h2>
-              <Button onClick={() => { setShowNewPost(true); setEditingPost(null); setPostForm({ icon: '🎵', tag: 'Louvor', title: '', desc: '', content: '', image: '', date: new Date().toLocaleDateString('pt-BR') }); }} className="bg-[#D4AF37] hover:bg-[#B8942E] text-white gap-2">
+              <Button onClick={() => { setShowNewPost(true); setEditingPost(null); setPostForm({ icon: '🎵', tag: 'Louvor', title: '', description: '', content: '', image: '', date: new Date().toISOString().split('T')[0], seoTitle: '', seoDescription: '', seoKeywords: '' }); }} className="bg-[#D4AF37] hover:bg-[#B8942E] text-white gap-2">
                 <Plus className="w-4 h-4" /> Novo Artigo
               </Button>
             </div>
@@ -235,14 +337,57 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 <CardHeader><CardTitle>{editingPost ? 'Editar Artigo' : 'Novo Artigo'}</CardTitle></CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div><Label>Ícone</Label><Input placeholder="Ex: 🔥" value={postForm.icon} onChange={e => setPostForm({ ...postForm, icon: e.target.value })} /></div>
-                    <div><Label>Categoria</Label><Input placeholder="Ex: Adoração" value={postForm.tag} onChange={e => setPostForm({ ...postForm, tag: e.target.value })} /></div>
+                    <div>
+                      <Label>Ícone</Label>
+                      <select value={postForm.icon} onChange={e => setPostForm({ ...postForm, icon: e.target.value })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                        <option value="🎵">🎵 Música</option>
+                        <option value="🔥">🔥 Fogo</option>
+                        <option value="🙏">🙏 Oração</option>
+                        <option value="📖">📖 Bíblia</option>
+                        <option value="✝️">✝️ Cruz</option>
+                        <option value="🕊️">🕊️ Pomba</option>
+                        <option value="💫">💫 Estrela</option>
+                        <option value="🌟">🌟 Brilho</option>
+                        <option value="🎶">🎶 Notas</option>
+                        <option value="💜">💜 Amor</option>
+                        <option value="⚔️">⚔️ Espírito</option>
+                        <option value="🛡️">🛡️ Escudo</option>
+                        <option value="❤️">❤️ Coração</option>
+                        <option value="🌅">🌅 Amanhecer</option>
+                        <option value="🌿">🌿 Paz</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label>Categoria</Label>
+                      <select value={postForm.tag} onChange={e => setPostForm({ ...postForm, tag: e.target.value })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                        <option value="Adoração">Adoração</option>
+                        <option value="Oração">Oração</option>
+                        <option value="Louvor">Louvor</option>
+                        <option value="Paz">Paz</option>
+                        <option value="Fé">Fé</option>
+                        <option value="Estudo">Estudo</option>
+                        <option value="Proteção">Proteção</option>
+                        <option value="Milagre">Milagre</option>
+                        <option value="Vida Cristã">Vida Cristã</option>
+                        <option value="Salmos">Salmos</option>
+                      </select>
+                    </div>
                   </div>
                   <div><Label>Título</Label><Input placeholder="Título do artigo" value={postForm.title} onChange={e => setPostForm({ ...postForm, title: e.target.value })} /></div>
-                  <div><Label>Resumo</Label><Input placeholder="Breve descrição" value={postForm.desc} onChange={e => setPostForm({ ...postForm, desc: e.target.value })} /></div>
+                  <div><Label>Resumo</Label><Input placeholder="Breve descrição" value={postForm.description} onChange={e => setPostForm({ ...postForm, description: e.target.value })} /></div>
                   <div>
-                    <Label>Imagem de Capa (URL)</Label>
-                    <Input placeholder="https://exemplo.com/imagem.jpg" value={postForm.image} onChange={e => setPostForm({ ...postForm, image: e.target.value })} />
+                    <Label>Imagem de Capa</Label>
+                    <div className="space-y-2">
+                      <Input placeholder="Cole a URL da imagem aqui" value={postForm.image} onChange={e => setPostForm({ ...postForm, image: e.target.value })} />
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400">ou</span>
+                        <label className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer transition-colors text-sm">
+                          <Image className="w-4 h-4" />
+                          <span>Enviar do dispositivo</span>
+                          <input ref={coverImageRef} type="file" accept="image/*" className="hidden" onChange={handleCoverImage} />
+                        </label>
+                      </div>
+                    </div>
                     {postForm.image && <img src={postForm.image} alt="Preview" className="mt-2 h-32 object-cover rounded-lg" />}
                   </div>
                   <div>
@@ -253,17 +398,37 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                       <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('strong', 'Texto em negrito:')} className="h-8 px-2 text-xs gap-1"><Bold className="w-3 h-3" /> Negrito</Button>
                       <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('em', 'Texto em itálico:')} className="h-8 px-2 text-xs gap-1"><Italic className="w-3 h-3" /> Itálico</Button>
                       <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('blockquote', 'Citação:')} className="h-8 px-2 text-xs gap-1"><Quote className="w-3 h-3" /> Citação</Button>
-                      <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('img', 'URL da imagem:')} className="h-8 px-2 text-xs gap-1 text-blue-600"><Image className="w-3 h-3" /> Imagem</Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => contentImageRef.current?.click()} className="h-8 px-2 text-xs gap-1 text-blue-600"><Image className="w-3 h-3" /> Imagem</Button>
+                      <input ref={contentImageRef} type="file" accept="image/*" className="hidden" onChange={handleContentImage} />
                       <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('a', 'URL do link:')} className="h-8 px-2 text-xs gap-1 text-green-600"><Link className="w-3 h-3" /> Link</Button>
                       <Button type="button" variant="ghost" size="sm" onClick={() => insertHTML('p', 'Parágrafo:')} className="h-8 px-2 text-xs gap-1">¶ Parágrafo</Button>
                     </div>
-                    <Textarea placeholder="<h2>Título da Seção</h2>&#10;<p>Conteúdo do artigo...</p>&#10;<blockquote>Citação bíblica</blockquote>&#10;<strong>Texto em negrito</strong>" rows={10} value={postForm.content} onChange={e => setPostForm({ ...postForm, content: e.target.value })} className="font-mono text-sm" />
+                    <Textarea ref={textareaRef} placeholder="<h2>Título da Seção</h2>&#10;<p>Conteúdo do artigo...</p>&#10;<blockquote>Citação bíblica</blockquote>&#10;<strong>Texto em negrito</strong>" rows={10} value={postForm.content} onChange={e => setPostForm({ ...postForm, content: e.target.value })} className="font-mono text-sm" />
                     {postForm.content && (
                       <div className="mt-2">
                         <Label className="text-xs text-gray-500">Preview:</Label>
                         <div className="border rounded-lg p-4 mt-1 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: postForm.content }} />
                       </div>
                     )}
+                  </div>
+                  <div className="border-t pt-4 mt-4">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">🔍 SEO (Opcional)</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <Label>Título SEO</Label>
+                        <Input placeholder="Título para Google (máx. 60 caracteres)" maxLength={60} value={postForm.seoTitle} onChange={e => setPostForm({ ...postForm, seoTitle: e.target.value })} />
+                        <p className="text-xs text-gray-400 mt-1">{postForm.seoTitle.length}/60 caracteres</p>
+                      </div>
+                      <div>
+                        <Label>Meta Descrição</Label>
+                        <Textarea placeholder="Descrição para Google (máx. 160 caracteres)" maxLength={160} rows={2} value={postForm.seoDescription} onChange={e => setPostForm({ ...postForm, seoDescription: e.target.value })} />
+                        <p className="text-xs text-gray-400 mt-1">{postForm.seoDescription.length}/160 caracteres</p>
+                      </div>
+                      <div>
+                        <Label>Palavras-chave</Label>
+                        <Input placeholder="Separadas por vírgula: louvor, adoração, fé" value={postForm.seoKeywords} onChange={e => setPostForm({ ...postForm, seoKeywords: e.target.value })} />
+                      </div>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <Button onClick={handleSavePost} className="bg-green-600 hover:bg-green-700 text-white gap-2"><Save className="w-4 h-4" /> Salvar</Button>
@@ -281,7 +446,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     <div className="flex-1 min-w-0">
                       <span className="text-xs bg-[#D4AF37]/10 text-[#D4AF37] px-2 py-1 rounded-full">{post.tag}</span>
                       <h3 className="font-semibold text-[#1a1f3a] mt-1">{post.title}</h3>
-                      <p className="text-sm text-gray-500 truncate">{post.desc}</p>
+                      <p className="text-sm text-gray-500 truncate">{post.description}</p>
                     </div>
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm" onClick={() => startEditPost(post)}><Edit className="w-4 h-4" /></Button>
@@ -356,7 +521,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 <CardContent className="space-y-4">
                   <div>
                     <Label>ID do YouTube</Label>
-                    <Input placeholder="Ex: 5MnuJP2ER1g (cole do link youtube.com/shorts/ID)" value={shortForm.youtubeId} onChange={e => setShortForm({ ...shortForm, youtubeId: e.target.value })} />
+                    <Input placeholder="Ex: 5MnuJP2ER1g ou URL completa" value={shortForm.youtubeId} onChange={e => setShortForm({ ...shortForm, youtubeId: e.target.value })} onBlur={e => setShortForm({ ...shortForm, youtubeId: extractYouTubeId(e.target.value) })} />
                     {shortForm.youtubeId && <img src={`https://img.youtube.com/vi/${shortForm.youtubeId}/mqdefault.jpg`} alt="Preview" className="mt-2 h-24 rounded-lg" />}
                   </div>
                   <div>

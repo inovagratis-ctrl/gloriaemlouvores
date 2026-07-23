@@ -2,10 +2,19 @@ import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Youtube, BookOpen, Heart, Shield, Moon, Sun, Music, Star, Send, Shuffle, Clock, Award, Smartphone, Quote } from "lucide-react";
-import { useData, shuffleArray } from "@/contexts/DataContext";
+import { useData } from "@/contexts/DataContext";
 import Navbar from "@/components/Navbar";
 import VideoCarousel from "@/components/VideoCarousel";
 import PsalmsCarousel from "@/components/PsalmsCarousel";
+
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
 
 const categories = [
   { icon: <Sun className="w-8 h-8" />, title: "Louvores de Adoração", desc: "Momentos intensos de presença de Deus", color: "from-amber-50 to-orange-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=adoração" },
@@ -19,7 +28,7 @@ const categories = [
 export default function Home() {
   const { videos, blogPosts, psalms, shorts } = useData();
   const [randomVideos, setRandomVideos] = useState(() => shuffleArray(videos).slice(0, 3));
-  const [channelStats, setChannelStats] = useState({ subscribers: 1400, videos: 107, views: 6800 });
+  const [channelStats, setChannelStats] = useState({ subscribers: 0, videos: 0, views: 0 });
 
   useEffect(() => {
     fetch("/api/channel-stats")
@@ -58,7 +67,7 @@ export default function Home() {
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-6 py-2.5 mb-8 backdrop-blur-sm">
             <Music className="w-4 h-4 text-[#D4AF37]" />
-            <span className="text-white/80 text-sm font-medium">+1.400 irmãos em Cristo</span>
+            <span className="text-white/80 text-sm font-medium">{channelStats.subscribers.toLocaleString('pt-BR')} irmãos em Cristo</span>
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-6 leading-tight">
             A Glória de Deus<span className="block text-[#D4AF37] mt-2">Desce Sobre Você</span>
@@ -75,13 +84,13 @@ export default function Home() {
               </a>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-full">
-              <a href="#contato"><Send className="w-5 h-5 mr-3" /> Pedir Oração</a>
+              <a href="/contato"><Send className="w-5 h-5 mr-3" /> Pedir Oração</a>
             </Button>
           </div>
           <div className="flex justify-center gap-8 sm:gap-12 mt-16">
-            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.videos}+</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Vídeos</div></div>
-            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.subscribers >= 1000 ? `${(channelStats.subscribers / 1000).toFixed(1)}K+` : `${channelStats.subscribers}+`}</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Inscritos</div></div>
-            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.views >= 1000 ? `${(channelStats.views / 1000).toFixed(1)}K` : channelStats.views}</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Views no Top</div></div>
+            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.videos}</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Vídeos</div></div>
+            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.subscribers.toLocaleString('pt-BR')}</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Inscritos</div></div>
+            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.views.toLocaleString('pt-BR')}</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Views</div></div>
           </div>
         </div>
       </section>
@@ -256,7 +265,7 @@ export default function Home() {
                         <span className="text-xs text-gray-400">{post.date}</span>
                       </div>
                       <h3 className="text-lg sm:text-xl font-bold text-[#0f0f0f] mb-2 line-clamp-2 group-hover:text-[#D4AF37] transition-colors">{post.title}</h3>
-                      <p className="text-gray-600 text-sm line-clamp-2 mb-4">{post.desc}</p>
+                      <p className="text-gray-600 text-sm line-clamp-2 mb-4">{post.description}</p>
                       <span className="text-[#D4AF37] font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">Ler artigo <span>→</span></span>
                     </CardContent>
                   </Card>
@@ -298,7 +307,7 @@ export default function Home() {
         <div className="container max-w-3xl mx-auto px-4 text-center relative z-10">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
             <Youtube className="w-4 h-4 text-[#D4AF37]" />
-            <span className="text-white text-sm font-medium">+1.400 inscritos</span>
+            <span className="text-white text-sm font-medium">{channelStats.subscribers.toLocaleString('pt-BR')} inscritos</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">Não perca nenhum louvor</h2>
           <p className="text-white/70 text-base sm:text-lg mb-10 max-w-xl mx-auto">Inscreva-se no canal e ative o sininho para receber notificações sempre que um novo louvor for publicado.</p>
@@ -341,18 +350,18 @@ export default function Home() {
             <div>
               <h4 className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[2px] mb-4">Categorias</h4>
               <ul className="space-y-2 text-sm text-white/60">
-                <li><a href="#adoracao" className="hover:text-[#D4AF37] transition-colors">Louvores de Adoração</a></li>
-                <li><a href="#oracao" className="hover:text-[#D4AF37] transition-colors">Músicas Para Orar</a></li>
-                <li><a href="#paz" className="hover:text-[#D4AF37] transition-colors">Louvores de Paz</a></li>
-                <li><a href="#dormir" className="hover:text-[#D4AF37] transition-colors">Louvores Para Dormir</a></li>
+                <li><a href="https://www.youtube.com/@gloriaemlouvores/search?query=adoração" target="_blank" className="hover:text-[#D4AF37] transition-colors">Louvores de Adoração</a></li>
+                <li><a href="https://www.youtube.com/@gloriaemlouvores/search?query=orar" target="_blank" className="hover:text-[#D4AF37] transition-colors">Músicas Para Orar</a></li>
+                <li><a href="https://www.youtube.com/@gloriaemlouvores/search?query=paz" target="_blank" className="hover:text-[#D4AF37] transition-colors">Louvores de Paz</a></li>
+                <li><a href="https://www.youtube.com/@gloriaemlouvores/search?query=dormir" target="_blank" className="hover:text-[#D4AF37] transition-colors">Louvores Para Dormir</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[2px] mb-4">Comunidade</h4>
               <ul className="space-y-2 text-sm text-white/60">
                 <li><a href="/blog" className="hover:text-[#D4AF37] transition-colors">Blog</a></li>
-                <li><a href="#contato" className="hover:text-[#D4AF37] transition-colors">Pedidos de Oração</a></li>
-                <li><a href="#contato" className="hover:text-[#D4AF37] transition-colors">Contato</a></li>
+                <li><a href="/contato" className="hover:text-[#D4AF37] transition-colors">Pedidos de Oração</a></li>
+                <li><a href="/contato" className="hover:text-[#D4AF37] transition-colors">Contato</a></li>
                 <li><a href="/admin" className="hover:text-[#D4AF37] transition-colors">Admin</a></li>
               </ul>
             </div>

@@ -2,11 +2,22 @@ import { useData } from "@/contexts/DataContext";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, Share2, BookOpen } from "lucide-react";
 import { Link, useParams } from "wouter";
+import { useEffect } from "react";
 
 export default function BlogPost() {
   const { blogPosts } = useData();
   const params = useParams();
   const post = blogPosts.find(p => p.id === params.id);
+
+  useEffect(() => {
+    if (post) {
+      document.title = post.seoTitle || `${post.title} — Glória em Louvores`;
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.setAttribute("content", post.seoDescription || post.description);
+      const keywords = document.querySelector('meta[name="keywords"]');
+      if (keywords && post.seoKeywords) keywords.setAttribute("content", post.seoKeywords);
+    }
+  }, [post]);
 
   if (!post) {
     return (
@@ -21,7 +32,7 @@ export default function BlogPost() {
 
   const handleShare = () => {
     if (navigator.share) {
-      navigator.share({ title: post.title, text: post.desc, url: window.location.href });
+      navigator.share({ title: post.title, text: post.description, url: window.location.href });
     } else {
       navigator.clipboard.writeText(window.location.href);
       alert("Link copiado!");
@@ -65,7 +76,7 @@ export default function BlogPost() {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6 leading-tight">{post.title}</h1>
 
           {/* Description */}
-          <p className="text-lg text-gray-600 mb-8 leading-relaxed">{post.desc}</p>
+          <p className="text-lg text-gray-600 mb-8 leading-relaxed">{post.description}</p>
 
           {/* Divider */}
           <div className="flex items-center gap-4 mb-8">

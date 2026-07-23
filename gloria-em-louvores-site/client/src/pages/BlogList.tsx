@@ -3,9 +3,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { Link } from "wouter";
+import { useEffect } from "react";
 
 export default function BlogList() {
   const { blogPosts } = useData();
+
+  useEffect(() => {
+    document.title = "Blog — Glória em Louvores | Reflexões de Fé e Louvor Gospel";
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute("content", "Artigos sobre louvor, oração e vida cristã. Reflexões bíblicas, salmos e testemunhos para fortalecer sua fé. Glória em Louvores.");
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F9F7F4]">
@@ -50,7 +57,7 @@ export default function BlogList() {
                       <span className="text-xs text-gray-400 flex items-center gap-1"><Calendar className="w-3 h-3" /> {post.date}</span>
                     </div>
                     <h3 className="text-lg sm:text-xl font-bold text-[#0f0f0f] mb-2 line-clamp-2">{post.title}</h3>
-                    <p className="text-gray-600 text-sm line-clamp-3">{post.desc}</p>
+                    <p className="text-gray-600 text-sm line-clamp-3">{post.description}</p>
                   </CardContent>
                 </Card>
               </Link>
