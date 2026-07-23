@@ -65,11 +65,15 @@ export default async function handler(req: any, res: any) {
     const body = await parseBody(req);
     req.body = body;
 
-    const query = req.query || {};
-    const resourceName = query.resource || '';
-    const id = query.id || '';
-
     const url = req.url || '';
+    const qsIdx = url.indexOf('?');
+    const qs = qsIdx >= 0 ? url.slice(qsIdx + 1) : '';
+    const qsParams = new URLSearchParams(qs);
+
+    const query = req.query || {};
+    const resourceName = (query.resource as string) || qsParams.get('resource') || '';
+    const id = (query.id as string) || qsParams.get('id') || '';
+
     const pathMatch = url.match(/\/api\/(\w+)(?:\/([^/?]+))?(?:\?.*)?$/);
     const pathResource = pathMatch?.[1];
     const pathId = pathMatch?.[2];
