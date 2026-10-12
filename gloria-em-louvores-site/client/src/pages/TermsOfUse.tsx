@@ -1,80 +1,72 @@
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+import { ChevronRight, Home, Scale } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 
 export default function TermsOfUse() {
   return (
-    <div className="min-h-screen bg-[#F9F7F4]">
-      <header className="bg-white border-b border-[#E8E4E0] sticky top-0 z-50">
-        <div className="container max-w-4xl mx-auto px-4 py-4 flex items-center gap-4">
-          <Link href="/"><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="w-4 h-4" /> Voltar</Button></Link>
-          <h1 className="text-xl font-bold text-[#1a1f3a]">Termos de Uso</h1>
+    <div className="min-h-screen bg-[#F9F7F4] flex flex-col">
+      <SEOHead
+        title="Termos de Uso e Responsabilidade Editorial | Glória em Louvores"
+        description="Termos de Uso do portal Glória em Louvores: regras de utilização do conteúdo devocional, direitos autorais e aviso de saúde emocional."
+        canonicalPath="/termos"
+        breadcrumbs={[
+          { name: "Início", path: "/" },
+          { name: "Termos de Uso", path: "/termos" },
+        ]}
+      />
+      <Navbar />
+
+      <section className="pt-28 pb-10 bg-gradient-to-br from-[#1a1f3a] to-[#0f1325] text-white">
+        <div className="container max-w-4xl mx-auto px-4">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/70 mb-5">
+            <Link href="/" className="hover:text-[#D4AF37] flex items-center gap-1">
+              <Home className="w-3.5 h-3.5" /> Início
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-white/40" />
+            <span className="text-[#D4AF37] font-semibold">Termos de Uso</span>
+          </nav>
+          <div className="flex items-center gap-3 mb-3">
+            <Scale className="w-7 h-7 text-[#D4AF37]" />
+            <h1 className="text-3xl sm:text-4xl font-bold text-white">Termos de Uso</h1>
+          </div>
+          <p className="text-white/80 text-sm sm:text-base">
+            Diretrizes de uso das ferramentas devocionais, estudos bíblicos e comunidade de oração.
+          </p>
         </div>
-      </header>
-      <main className="container max-w-3xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-2xl p-8 sm:p-12 shadow-sm border border-[#E8E4E0]">
-          <p className="text-sm text-gray-400 mb-6">Última atualização: 22 de julho de 2026</p>
+      </section>
 
-          <h2 className="text-2xl font-bold text-[#1a1f3a] mb-4">1. Aceitação dos Termos</h2>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            Ao acessar e utilizar o site Glória em Louvores, você concorda com estes Termos de Uso. Se não concordar com algum dos termos, por favor, não utilize o site.
+      <main className="container max-w-4xl mx-auto px-4 py-12 flex-1">
+        <div className="bg-white rounded-2xl p-8 sm:p-12 shadow-sm border border-[#E8E4E0] space-y-6 text-gray-700 leading-relaxed">
+          <p className="text-xs text-gray-400">Última atualização: 12 de outubro de 2026</p>
+
+          <h2 className="text-2xl font-bold text-[#1a1f3a]">1. Aceitação dos Termos</h2>
+          <p>
+            Ao acessar e utilizar o portal <strong>Glória em Louvores</strong> (<code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded">gloriaemlouvores.com.br</code>), você concorda com estes Termos de Uso.
           </p>
 
-          <h2 className="text-2xl font-bold text-[#1a1f3a] mb-4">2. Sobre o Site</h2>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            O Glória em Louvores é um canal gospel dedicado a compartilhar louvores, músicas cristãs e conteúdo de fé. Nosso site é uma extensão do canal no YouTube, oferecendo blog, orações e comunidade.
+          <h2 className="text-2xl font-bold text-[#1a1f3a]">2. Uso do Conteúdo e Direitos Autorais</h2>
+          <p>
+            Você pode imprimir e utilizar gratuitamente nossos roteiros de culto doméstico, planos de leitura bíblica e estudos para uso pessoal, familiar ou em pequenos grupos/Escola Dominical na sua igreja local, desde que citada a fonte (<strong>Glória em Louvores — gloriaemlouvores.com.br</strong>). Não é permitida a reprodução comercial ou republicação integral em outros sites sem autorização prévia.
+          </p>
+          <p>
+            Os vídeos musicais exibidos no portal são incorporados oficialmente do YouTube, sem redistribuição de arquivos fonográficos ou letras protegidas sem licença (veja mais em <Link href="/sobre" className="underline font-medium">/sobre</Link>).
           </p>
 
-          <h2 className="text-2xl font-bold text-[#1a1f3a] mb-4">3. Uso do Conteúdo</h2>
-          <p className="text-gray-600 mb-4 leading-relaxed">
-            Todo o conteúdo do site é de responsabilidade do Glória em Louvores. Você pode:
-          </p>
-          <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
-            <li>Compartilhar os links dos vídeos e artigos</li>
-            <li>Utilizar as músicas para fins pessoais e de oração</li>
-            <li>Compartilhar o conteúdo nas redes sociais</li>
-          </ul>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            Não é permitido reproduzir o conteúdo total ou parcial sem autorização prévia.
+          <h2 className="text-2xl font-bold text-[#1a1f3a]">3. Conduta na Comunidade de Oração</h2>
+          <p>
+            No mural de <Link href="/comunidade" className="underline font-medium">Comunidade de Oração</Link>, os usuários comprometem-se a manter linguagem respeitosa, fraterna e cristã, sem expor dados sensíveis de terceiros, discursos de ódio ou propaganda comercial.
           </p>
 
-          <h2 className="text-2xl font-bold text-[#1a1f3a] mb-4">4. Conduta do Usuário</h2>
-          <p className="text-gray-600 mb-4 leading-relaxed">
-            Ao utilizar o site, você concorda em:
-          </p>
-          <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
-            <li>Respeitar outros membros da comunidade</li>
-            <li>Não utilizar o site para fins ilegais ou não autorizados</li>
-            <li>Não enviar conteúdos ofensivos, discriminatórios ou inadequados</li>
-            <li>Manter o respeito às diversas denominações cristãs</li>
-          </ul>
-
-          <h2 className="text-2xl font-bold text-[#1a1f3a] mb-4">5. Pedidos de Oração</h2>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            Os pedidos de oração são tratados com sigilo e carinho. Reservamo-nos o direito de não publicar conteúdos que contrariem nossos princípios de fé e respeito.
-          </p>
-
-          <h2 className="text-2xl font-bold text-[#1a1f3a] mb-4">6. Links Externos</h2>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            O site pode conter links para plataformas externas (YouTube, etc.). Não nos responsabilizamos pelo conteúdo ou práticas desses sites.
-          </p>
-
-          <h2 className="text-2xl font-bold text-[#1a1f3a] mb-4">7. Isenção de Responsabilidade</h2>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            O conteúdo do site é de caráter educativo e espiritual. Não substitui aconselhamento profissional, médico ou psicológico. Em caso de necessidade, busque ajuda especializada.
-          </p>
-
-          <h2 className="text-2xl font-bold text-[#1a1f3a] mb-4">8. Alterações nos Termos</h2>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            Reservamo-nos o direito de alterar estes Termos de Uso a qualquer momento. As alterações entram em vigor imediatamente após a publicação no site.
-          </p>
-
-          <h2 className="text-2xl font-bold text-[#1a1f3a] mb-4">9. Contato</h2>
-          <p className="text-gray-600 leading-relaxed">
-            Em caso de dúvidas sobre estes Termos de Uso, entre em contato através do nosso formulário de contato ou pelo canal no YouTube.
+          <h2 className="text-2xl font-bold text-[#1a1f3a]">4. Isenção de Responsabilidade Médica e Psicológica</h2>
+          <p>
+            Todo o conteúdo deste portal possui caráter exclusivamente espiritual, devocional e educativo. <strong>Importante: A oração e a reflexão espiritual são fontes de fé e consolo, mas não substituem acompanhamento psicológico, médico ou serviços de emergência. Em caso de crise emocional aguda, ligue 188 (CVV).</strong>
           </p>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

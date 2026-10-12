@@ -1,380 +1,464 @@
 import { useState, useMemo, useEffect } from "react";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Youtube, BookOpen, Heart, Shield, Moon, Sun, Music, Star, Send, Shuffle, Clock, Award, Smartphone, Quote } from "lucide-react";
+import {
+  Youtube,
+  BookOpen,
+  Heart,
+  Calendar,
+  FolderHeart,
+  Users,
+  Sparkles,
+  ArrowRight,
+  Clock,
+  Award,
+  CheckCircle2,
+  Compass,
+  ShieldCheck,
+} from "lucide-react";
 import { useData } from "@/contexts/DataContext";
+import { CATEGORY_HUBS_META, CategorySlug } from "@/lib/articlesData";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import VideoCarousel from "@/components/VideoCarousel";
 import PsalmsCarousel from "@/components/PsalmsCarousel";
+import AffiliateBox from "@/components/AffiliateBox";
+import AdSlot from "@/components/AdSlot";
 
-const shuffleArray = <T,>(array: T[]): T[] => {
-  const arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-};
-
-const categories = [
-  { icon: <Sun className="w-8 h-8" />, title: "Louvores de Adoração", desc: "Momentos intensos de presença de Deus", color: "from-amber-50 to-orange-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=adoração" },
-  { icon: <BookOpen className="w-8 h-8" />, title: "Louvores Para Orar", desc: "Músicas que abrem os céus sobre sua vida", color: "from-blue-50 to-indigo-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=orar" },
-  { icon: <Heart className="w-8 h-8" />, title: "Louvores de Paz", desc: "Tranquilidade e descanso em Deus", color: "from-green-50 to-emerald-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=paz" },
-  { icon: <Star className="w-8 h-8" />, title: "Louvores de Fé", desc: "Fortaleça sua fé e crê nos milagres", color: "from-yellow-50 to-amber-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=fé" },
-  { icon: <Shield className="w-8 h-8" />, title: "Louvores de Proteção", desc: "Cobertura divina sobre sua família", color: "from-purple-50 to-violet-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=proteção" },
-  { icon: <Moon className="w-8 h-8" />, title: "Louvores Para Dormir", desc: "Descanse na presença do Senhor", color: "from-indigo-50 to-blue-50", link: "https://www.youtube.com/@gloriaemlouvores/search?query=dormir" },
+const HUB_LIST: CategorySlug[] = [
+  "devocionais",
+  "oracoes",
+  "estudos-biblicos",
+  "versiculos",
+  "familia",
+  "jovens",
+  "musica-e-adoracao",
+  "recursos-para-igrejas",
 ];
 
 export default function Home() {
-  const { videos, blogPosts, psalms, shorts } = useData();
-  const [randomVideos, setRandomVideos] = useState(() => shuffleArray(videos).slice(0, 3));
-  const [channelStats, setChannelStats] = useState({ subscribers: 0, videos: 0, views: 0 });
+  const { videos, blogPosts } = useData();
+  const [channelStats, setChannelStats] = useState({
+    subscribers: 1470,
+    videos: 107,
+    views: 96530,
+  });
 
   useEffect(() => {
     fetch("/api/channel-stats")
       .then(res => res.json())
       .then(data => {
-        if (data.subscribers) setChannelStats(data);
+        if (data && data.subscribers) setChannelStats(data);
       })
       .catch(() => {});
   }, []);
 
-  const featuredVideos = useMemo(() => videos.filter(v => v.featured), [videos]);
-  const recentVideos = useMemo(() => [...videos].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3), [videos]);
+  const featuredVideos = useMemo(() => {
+    const feat = videos.filter(v => v.featured);
+    return feat.length > 0 ? feat : videos.slice(0, 3);
+  }, [videos]);
 
-  const refreshRandom = () => setRandomVideos(shuffleArray(videos).slice(0, 3));
+  const devotionalOfTheDay = useMemo(() => {
+    return (
+      blogPosts.find(
+        p => p.id === "devocional-comecar-a-semana-com-proposito-paz-e-sabedoria"
+      ) || blogPosts[0]
+    );
+  }, [blogPosts]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#F9F7F4] flex flex-col">
+      <SEOHead
+        title="Glória em Louvores — Portal Cristão de Oração, Devocionais, Estudos Bíblicos e Adoração"
+        description="Portal cristão de utilidade prática: Devocional do Dia, Plano de Leitura Bíblica de 30 Dias e Anual, Caderno de Oração Interativo, Estudos Bíblicos, Guias para Família e Igrejas e Louvores Oficiais."
+        keywords="devocional diário, plano de leitura bíblica 30 dias, caderno de oração, estudos bíblicos, culto doméstico em família, recursos para igrejas, glória em louvores"
+        canonicalPath="/"
+        breadcrumbs={[{ name: "Início", path: "/" }]}
+      />
       <Navbar />
-      {/* Hero */}
-      <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
+
+      {/* Hero Section — Reverent, Welcoming, Clear Utility Proposal */}
+      <section className="relative pt-28 pb-20 sm:pt-36 sm:pb-24 overflow-hidden bg-[#111528]">
         <div className="absolute inset-0">
           <img
             src="/images/hero.png"
-            alt="Adoração"
-            className="w-full h-full object-cover"
+            alt="Leitura Bíblica, Oração e Adoração"
+            className="w-full h-full object-cover opacity-35"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0f0f0f]/80 via-[#0f0f0f]/60 to-[#0f0f0f]/90" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1a1f3a]/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#111528]/90 via-[#111528]/80 to-[#111528]" />
         </div>
-        {/* Glow effects */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-[#D4AF37]/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#D4AF37]/8 rounded-full blur-[100px]" />
-        </div>
-        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-6 py-2.5 mb-8 backdrop-blur-sm">
-            <Music className="w-4 h-4 text-[#D4AF37]" />
-            <span className="text-white/80 text-sm font-medium">{channelStats.subscribers.toLocaleString('pt-BR')} irmãos em Cristo</span>
-          </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-6 leading-tight">
-            A Glória de Deus<span className="block text-[#D4AF37] mt-2">Desce Sobre Você</span>
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl text-white/70 mb-10 max-w-3xl mx-auto leading-relaxed">
-            Louvores gospel poderosos que <span className="text-white font-medium">expulsam todo mal</span> e trazem a paz de Deus para o seu coração.
-            <br className="hidden md:block" />
-            <span className="text-white/50 text-sm md:text-base">Católicos, evangélicos, todas as denominações — todos são bem-vindos na presença do Senhor.</span>
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-[#FF0000] hover:bg-[#CC0000] text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-[#FF0000]/25">
-              <a href="https://www.youtube.com/@gloriaemlouvores?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
-                <Youtube className="w-6 h-6 mr-3" /> Assistir no YouTube
-              </a>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-full">
-              <a href="/contato"><Send className="w-5 h-5 mr-3" /> Pedir Oração</a>
-            </Button>
-          </div>
-          <div className="flex justify-center gap-8 sm:gap-12 mt-16">
-            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.videos}</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Vídeos</div></div>
-            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.subscribers.toLocaleString('pt-BR')}</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Inscritos</div></div>
-            <div className="text-center"><div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37]">{channelStats.views.toLocaleString('pt-BR')}</div><div className="text-xs sm:text-sm text-white/50 uppercase tracking-wider mt-1">Views</div></div>
-          </div>
-        </div>
-      </section>
 
-      {/* Scripture */}
-      <section className="py-16 sm:py-24 bg-[#F9F7F4]">
-        <PsalmsCarousel />
-      </section>
+        <div className="relative z-10 container max-w-6xl mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
+              <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+              <span className="text-white/90 text-xs sm:text-sm font-medium">
+                Portal de Utilidade Cristã • Oração, Bíblia, Família & Igreja Local
+              </span>
+            </div>
 
-      {/* About */}
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12 sm:mb-16">
-            <p className="text-[#D4AF37] text-sm font-semibold uppercase tracking-[3px] mb-4">O Canal</p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6">Adoração que <span className="text-[#D4AF37]">transforma</span> vidas</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">O Glória em Louvores é um canal dedicado a levar a presença de Deus através da música. Uma família de fé que cresce a cada dia.</p>
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              Recursos Bíblicos para sua{" "}
+              <span className="text-[#D4AF37]">Vida Devocional, Lar e Igreja</span>
+            </h1>
+
+            <p className="text-base sm:text-lg text-white/80 mb-8 leading-relaxed">
+              Estudos bíblicos contextualizados, devocionais diários, plano de leitura bíblica interativo, caderno de oração e curadoria de louvores oficiais — com reverência, fidelidade às Escrituras e acolhimento para cristãos de todas as denominações.
+            </p>
+
+            {/* Primary Utility Actions (1 Click) */}
+            <div className="flex flex-wrap gap-3 justify-center mb-12">
+              <Link href="/plano-de-leitura">
+                <Button
+                  size="lg"
+                  className="bg-[#D4AF37] hover:bg-[#B8942E] text-[#111528] font-bold px-6 py-6 rounded-xl shadow-lg gap-2"
+                >
+                  <Calendar className="w-5 h-5" />
+                  Plano de Leitura (30 Dias & Anual)
+                </Button>
+              </Link>
+              <Link href="/materiais">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white/30 bg-white/10 text-white hover:bg-white/20 px-6 py-6 rounded-xl gap-2"
+                >
+                  <FolderHeart className="w-5 h-5 text-[#D4AF37]" />
+                  Caderno de Oração & Guias
+                </Button>
+              </Link>
+              <Link href="/comunidade">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white/30 bg-white/5 text-white hover:bg-white/15 px-6 py-6 rounded-xl gap-2"
+                >
+                  <Users className="w-5 h-5 text-[#D4AF37]" />
+                  Mural de Oração
+                </Button>
+              </Link>
+            </div>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+
+          {/* 4 Quick Utility Cards */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { icon: "🎶", title: "Louvores Poderosos", desc: "Mais de 100 louvores gospel selecionados para adorar e glorificar a Deus." },
-              { icon: "🙏", title: "Oração Guiada", desc: "Momentos de oração guiada para fortalecer sua fé e conexão com o Pai." },
-              { icon: "📖", title: "Estudo Bíblico", desc: "Reflexões e estudos baseados nas Escrituras para crescimento espiritual." },
-              { icon: "✨", title: "Adoração 24/7", desc: "Experiências de adoração que tocam o coração e transformam vidas." },
-            ].map((item, i) => (
-              <Card key={i} className="border-0 shadow-lg bg-[#F9F7F4] hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <CardContent className="p-6 sm:p-8 text-center">
-                  <div className="text-4xl sm:text-5xl mb-4">{item.icon}</div>
-                  <h3 className="text-lg sm:text-xl font-bold text-[#D4AF37] mb-2">{item.title}</h3>
-                  <p className="text-gray-600 text-sm sm:text-base">{item.desc}</p>
-                </CardContent>
-              </Card>
+              {
+                icon: <Calendar className="w-6 h-6 text-[#D4AF37]" />,
+                title: "Plano de Leitura Bíblica",
+                desc: "Jornada de 30 dias e Plano Anual com marcação automática no navegador.",
+                href: "/plano-de-leitura",
+                cta: "Começar leitura →",
+              },
+              {
+                icon: <FolderHeart className="w-6 h-6 text-[#D4AF37]" />,
+                title: "Caderno de Oração",
+                desc: "Organize pedidos, gratidão, versículos e baixe roteiros de culto doméstico.",
+                href: "/materiais",
+                cta: "Abrir caderno →",
+              },
+              {
+                icon: <BookOpen className="w-6 h-6 text-[#D4AF37]" />,
+                title: "12 Estudos & Guias",
+                desc: "Estudos bíblicos com método indutivo, contexto histórico e aplicação.",
+                href: "/estudos-biblicos",
+                cta: "Explorar estudos →",
+              },
+              {
+                icon: <Users className="w-6 h-6 text-[#D4AF37]" />,
+                title: "Comunidade de Oração",
+                desc: "Intercessão fraterna moderada, guia para grupos e acolhimento pastoral.",
+                href: "/comunidade",
+                cta: "Participar →",
+              },
+            ].map((tool, i) => (
+              <Link key={i} href={tool.href}>
+                <div className="rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 p-5 transition-all cursor-pointer h-full flex flex-col justify-between backdrop-blur-sm">
+                  <div>
+                    <div className="mb-3">{tool.icon}</div>
+                    <h2 className="text-base font-bold text-white mb-1.5">{tool.title}</h2>
+                    <p className="text-xs text-white/75 leading-relaxed">{tool.desc}</p>
+                  </div>
+                  <span className="text-xs font-bold text-[#D4AF37] mt-4 inline-block">
+                    {tool.cta}
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* VÍDEOS EM DESTAQUE */}
+      {/* Devocional em Destaque & Versículo de Meditação */}
+      <section className="py-12 sm:py-16 bg-white border-b border-[#E8E4E0]">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="grid lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-7 bg-[#F9F7F4] rounded-2xl border border-[#D4AF37]/30 p-6 sm:p-8">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#D4AF37] mb-2">
+                <Sparkles className="w-4 h-4" />
+                Devocional & Reflexão em Destaque
+              </div>
+              {devotionalOfTheDay && (
+                <>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1f3a] mb-3">
+                    {devotionalOfTheDay.title}
+                  </h2>
+                  <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-4">
+                    {devotionalOfTheDay.description}
+                  </p>
+                  <blockquote className="border-l-4 border-[#D4AF37] pl-4 py-1 text-sm italic text-[#1a1f3a] mb-6">
+                    "As misericórdias do Senhor são a causa de não sermos consumidos, porque as suas misericórdias não têm fim; novidades são cada manhã; grande é a tua fidelidade." — Lamentações 3:22-23
+                  </blockquote>
+                  <div className="flex flex-wrap gap-3">
+                    <Link href={`/blog/${devotionalOfTheDay.id}`}>
+                      <Button className="bg-[#1a1f3a] hover:bg-[#2d3561] text-white gap-2">
+                        Ler Devocional Completo <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                    <Link href="/devocionais">
+                      <Button variant="outline">Mais Devocionais</Button>
+                    </Link>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="lg:col-span-5">
+              <div className="rounded-2xl bg-[#F9F7F4] border border-[#E8E4E0] p-6">
+                <div className="text-center mb-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF37]">
+                    Salmos & Meditação (Almeida)
+                  </span>
+                </div>
+                <PsalmsCarousel />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8 Thematic Category Hubs (1 Click Navigation) */}
+      <section className="py-14 sm:py-20 bg-[#F9F7F4]">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#D4AF37]">
+              Navegação por Temas e Ministérios
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1f3a] mt-2 mb-3">
+              Explore Nossos Hubs de Conteúdo e Recursos Práticos
+            </h2>
+            <p className="text-gray-600 text-sm sm:text-base">
+              Acesse em 1 clique estudos bíblicos, roteiros de oração, guias para famílias, reuniões de jovens e células.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {HUB_LIST.map(slug => {
+              const hub = CATEGORY_HUBS_META[slug];
+              return (
+                <Link key={slug} href={`/${slug}`}>
+                  <Card className="bg-white border border-[#E8E4E0] hover:border-[#D4AF37] hover:shadow-lg transition-all cursor-pointer h-full">
+                    <CardContent className="p-6 flex flex-col justify-between h-full">
+                      <div>
+                        <div className="text-3xl mb-3">{hub.icon}</div>
+                        <h3 className="text-lg font-bold text-[#1a1f3a] mb-2">
+                          {hub.title}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mb-4">
+                          {hub.subtitle}
+                        </p>
+                      </div>
+                      <span className="text-xs font-bold text-[#1a1f3a] flex items-center gap-1 group-hover:text-[#D4AF37]">
+                        Acessar categoria <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+                      </span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Complete Editorial Library (12 Original Studies, Devotionals & Guides) */}
+      <section className="py-14 sm:py-20 bg-white border-t border-[#E8E4E0]">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-widest text-[#D4AF37]">
+                Biblioteca Devocional e Teológica
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1f3a] mt-1">
+                Estudos Bíblicos, Devocionais e Guias Práticos
+              </h2>
+            </div>
+            <Link href="/blog">
+              <Button variant="outline" className="border-[#1a1f3a] text-[#1a1f3a] gap-2">
+                <BookOpen className="w-4 h-4" />
+                Ver Todos os {blogPosts.length} Estudos
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {blogPosts.slice(0, 6).map(post => (
+              <Link key={post.id} href={`/blog/${post.id}`}>
+                <Card className="border border-[#E8E4E0] hover:border-[#D4AF37] hover:shadow-xl transition-all duration-300 bg-[#F9F7F4]/50 cursor-pointer h-full flex flex-col group">
+                  <div className="h-32 bg-gradient-to-br from-[#1a1f3a] to-[#283056] flex items-center justify-between px-6">
+                    <span className="text-4xl group-hover:scale-110 transition-transform">
+                      {post.icon}
+                    </span>
+                    <span className="bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30 text-xs font-semibold px-3 py-1 rounded-full">
+                      {post.tag}
+                    </span>
+                  </div>
+                  <CardContent className="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
+                        <span>{post.date}</span>
+                        {post.readingTime && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-[#D4AF37]" />
+                            {post.readingTime}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-lg font-bold text-[#1a1f3a] group-hover:text-[#D4AF37] transition-colors mb-2 line-clamp-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-gray-600 text-xs sm:text-sm line-clamp-3 mb-4">
+                        {post.description}
+                      </p>
+                    </div>
+                    <span className="text-xs font-bold text-[#1a1f3a] group-hover:text-[#D4AF37] flex items-center gap-1">
+                      Ler estudo completo <ArrowRight className="w-3.5 h-3.5" />
+                    </span>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+
+          {/* Remaining 6 links in a compact quick-access directory */}
+          {blogPosts.length > 6 && (
+            <div className="mt-8 p-6 rounded-2xl bg-[#F9F7F4] border border-[#E8E4E0]">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-[#1a1f3a] mb-4 flex items-center gap-2">
+                <Compass className="w-4 h-4 text-[#D4AF37]" />
+                Mais Guias Práticos e Estudos do Portal:
+              </h3>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {blogPosts.slice(6, 12).map(post => (
+                  <Link key={post.id} href={`/blog/${post.id}`}>
+                    <div className="p-3.5 rounded-xl bg-white border border-[#E8E4E0] hover:border-[#D4AF37] transition-all cursor-pointer flex items-start gap-3">
+                      <span className="text-2xl shrink-0">{post.icon}</span>
+                      <div>
+                        <span className="text-[11px] font-bold text-[#D4AF37] block">
+                          {post.tag}
+                        </span>
+                        <h4 className="text-xs sm:text-sm font-bold text-[#1a1f3a] line-clamp-2">
+                          {post.title}
+                        </h4>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Official YouTube Channel Curated Embeds */}
       {featuredVideos.length > 0 && (
-        <section className="py-16 sm:py-24 bg-[#F9F7F4]">
+        <section className="py-14 sm:py-20 bg-[#F9F7F4] border-t border-[#E8E4E0]">
           <div className="container max-w-6xl mx-auto px-4">
-            <div className="flex items-center gap-3 mb-8">
-              <Award className="w-6 h-6 text-[#D4AF37]" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#0f0f0f]">Destaques</h2>
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+              <div>
+                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#D4AF37] mb-1">
+                  <Award className="w-4 h-4" />
+                  Curadoria Oficial no YouTube (@gloriaemlouvores)
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1f3a]">
+                  Louvores e Momentos de Adoração para Acompanhar sua Oração
+                </h2>
+                <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                  Vídeos incorporados oficialmente do YouTube em respeito aos direitos autorais ({channelStats.subscribers.toLocaleString("pt-BR")} inscritos).
+                </p>
+              </div>
+              <Button
+                asChild
+                variant="outline"
+                className="border-[#1a1f3a] text-[#1a1f3a] gap-2 shrink-0"
+              >
+                <a
+                  href="https://www.youtube.com/@gloriaemlouvores"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Youtube className="w-4 h-4 text-[#FF0000]" />
+                  Visitar Canal no YouTube
+                </a>
+              </Button>
             </div>
             <VideoCarousel videos={featuredVideos} />
           </div>
         </section>
       )}
 
-      {/* VÍDEOS RECENTES */}
-      {recentVideos.length > 0 && (
-        <section className="py-16 sm:py-24 bg-white">
-          <div className="container max-w-6xl mx-auto px-4">
-            <div className="flex items-center gap-3 mb-8">
-              <Clock className="w-6 h-6 text-[#D4AF37]" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#0f0f0f]">Recentes</h2>
-            </div>
-            <VideoCarousel videos={recentVideos} />
-          </div>
-        </section>
-      )}
-
-      {/* VÍDEOS ALEATÓRIOS */}
-      <section className="py-16 sm:py-24 bg-[#F9F7F4]">
+      {/* Editorial Transparency, Unity in Christ & Ethical Recommendation */}
+      <section className="py-14 bg-white border-t border-[#E8E4E0]">
         <div className="container max-w-6xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <Shuffle className="w-6 h-6 text-[#D4AF37]" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#0f0f0f]">Descubra</h2>
-            </div>
-            <Button variant="outline" size="sm" onClick={refreshRandom} className="gap-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white">
-              <Shuffle className="w-4 h-4" /> Trocar
-            </Button>
-          </div>
-          <VideoCarousel videos={randomVideos} />
-        </div>
-      </section>
-
-      {/* SHORTS */}
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-[#FF0000]/10 rounded-full px-4 py-1.5 mb-4">
-              <Smartphone className="w-4 h-4 text-[#FF0000]" />
-              <span className="text-[#FF0000] text-sm font-semibold">YouTube Shorts</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-4">Momentos de <span className="text-[#FF0000]">fé</span></h2>
-            <p className="text-gray-500 max-w-xl mx-auto">Clipes curtos que tocam o coração — perfeitos para compartilhar a Palavra</p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {shorts.map((short) => (
-              <a key={short.id} href={`https://youtube.com/shorts/${short.youtubeId}`} target="_blank" rel="noopener noreferrer" className="group">
-                <div className="relative aspect-[9/16] rounded-2xl overflow-hidden bg-gradient-to-br from-[#1a1f3a] to-[#0f0f0f] border-2 border-transparent hover:border-[#FF0000] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <img
-                    src={`https://img.youtube.com/vi/${short.youtubeId}/maxresdefault.jpg`}
-                    alt={short.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-14 h-14 bg-[#FF0000] rounded-full flex items-center justify-center shadow-lg shadow-[#FF0000]/30">
-                      <Youtube className="w-7 h-7 text-white" />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-                    <p className="text-white text-xs font-semibold truncate">{short.title}</p>
-                  </div>
+          <div className="rounded-2xl bg-gradient-to-br from-[#1a1f3a] to-[#111528] text-white p-8 sm:p-10 mb-8">
+            <div className="grid md:grid-cols-12 gap-6 items-center">
+              <div className="md:col-span-8 space-y-3">
+                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#D4AF37]">
+                  <ShieldCheck className="w-4 h-4" />
+                  Unidade Cristã e Compromisso Editorial
                 </div>
-              </a>
-            ))}
-          </div>
-          <div className="text-center mt-8">
-            <Button asChild variant="outline" size="lg" className="border-[#FF0000] text-[#FF0000] hover:bg-[#FF0000] hover:text-white gap-2">
-              <a href="https://www.youtube.com/@gloriaemlouvores/shorts" target="_blank" rel="noopener noreferrer">
-                <Smartphone className="w-5 h-5" /> Ver todos os Shorts
-              </a>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Categories */}
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12 sm:mb-16">
-            <p className="text-[#D4AF37] text-sm font-semibold uppercase tracking-[3px] mb-4">Explore</p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-6">Escolha o seu <span className="text-[#D4AF37]">momento</span></h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {categories.map((cat, i) => (
-              <a key={i} href={cat.link} target="_blank" rel="noopener noreferrer">
-                <Card className={`border border-[#E8E4E0] bg-gradient-to-br ${cat.color} hover:border-[#D4AF37] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer h-full`}>
-                  <CardContent className="p-6 sm:p-8">
-                    <div className="text-[#D4AF37] mb-4">{cat.icon}</div>
-                    <h3 className="text-lg sm:text-xl font-bold text-[#1a1f3a] mb-2">{cat.title}</h3>
-                    <p className="text-gray-600 text-sm sm:text-base mb-4">{cat.desc}</p>
-                    <span className="text-[#D4AF37] font-semibold text-sm">Ver louvores →</span>
-                  </CardContent>
-                </Card>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Blog */}
-      {blogPosts.length > 0 && (
-        <section className="py-16 sm:py-24 bg-[#F9F7F4]">
-          <div className="container max-w-6xl mx-auto px-4">
-            <div className="text-center mb-12 sm:mb-16">
-              <div className="inline-flex items-center gap-2 bg-[#D4AF37]/10 rounded-full px-4 py-1.5 mb-4">
-                <BookOpen className="w-4 h-4 text-[#D4AF37]" />
-                <span className="text-[#D4AF37] text-sm font-semibold">Blog</span>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white">
+                  Um espaço reverente, bíblico e acolhedor para toda a família da fé
+                </h2>
+                <p className="text-white/80 text-sm sm:text-base leading-relaxed">
+                  Seja você evangélico, católico, reformado, batista, presbiteriano, metodista ou assembleiano — aqui você encontra ferramentas gratuitas centradas nas Escrituras, sem promessas apelativas e com profundo respeito aos direitos autorais e ao cuidado emocional.
+                </p>
+                <div className="flex flex-wrap gap-4 pt-2 text-xs text-white/80">
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" /> Textos Bíblicos Almeida
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" /> Reflexões 100% Originais
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" /> Sem Anúncios no Mural de Oração
+                  </span>
+                </div>
               </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f0f0f] mb-4">Reflexões de fé</h2>
-              <p className="text-gray-500 max-w-xl mx-auto">Artigos sobre louvor, oração e vida cristã</p>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {blogPosts.slice(0, 3).map((post) => (
-                <a key={post.id} href={`/blog/${post.id}`}>
-                  <Card className="border border-[#E8E4E0] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white cursor-pointer h-full group">
-                    {post.image ? (
-                      <div className="h-40 sm:h-48 overflow-hidden">
-                        <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                      </div>
-                    ) : (
-                      <div className="h-40 sm:h-48 bg-gradient-to-br from-[#F4E4C1] to-[#F9F7F4] flex items-center justify-center text-5xl sm:text-6xl group-hover:scale-110 transition-transform duration-500">{post.icon}</div>
-                    )}
-                    <CardContent className="p-5 sm:p-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="inline-block bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-semibold px-3 py-1 rounded-full">{post.tag}</span>
-                        <span className="text-xs text-gray-400">{post.date}</span>
-                      </div>
-                      <h3 className="text-lg sm:text-xl font-bold text-[#0f0f0f] mb-2 line-clamp-2 group-hover:text-[#D4AF37] transition-colors">{post.title}</h3>
-                      <p className="text-gray-600 text-sm line-clamp-2 mb-4">{post.description}</p>
-                      <span className="text-[#D4AF37] font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">Ler artigo <span>→</span></span>
-                    </CardContent>
-                  </Card>
-                </a>
-              ))}
-            </div>
-            <div className="text-center mt-10">
-              <a href="/blog">
-                <Button variant="outline" size="lg" className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white gap-2 px-8">
-                  <BookOpen className="w-5 h-5" /> Ver mais reflexões
-                </Button>
-              </a>
+              <div className="md:col-span-4 flex flex-col gap-3">
+                <Link href="/sobre">
+                  <Button className="w-full bg-[#D4AF37] hover:bg-[#B8942E] text-[#111528] font-bold">
+                    Conhecer Nossa Metodologia
+                  </Button>
+                </Link>
+                <Link href="/transparencia-afiliados">
+                  <Button
+                    variant="outline"
+                    className="w-full border-white/25 text-white hover:bg-white/10"
+                  >
+                    Política de Transparência
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
-        </section>
-      )}
 
-      {/* Inclusive Message */}
-      <section className="py-16 sm:py-24 bg-gradient-to-br from-[#1a1f3a] to-[#0f0f0f]">
-        <div className="container max-w-4xl mx-auto px-4 text-center">
-          <div className="text-5xl sm:text-6xl mb-8">✝️</div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6">Uma Família em <span className="text-[#D4AF37]">Cristo</span></h2>
-          <p className="text-white/70 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
-            Seja você católico, evangélico, presbiteriano, batista, assembleiano, metodista ou de qualquer outra denominação — aqui todos são bem-vindos. Pois em Cristo não há divisão, mas <span className="text-white font-medium">unidade na fé</span>.
-          </p>
-          <blockquote className="text-white/50 italic text-sm sm:text-base border-l-2 border-[#D4AF37] pl-4 max-w-xl mx-auto">
-            "Há um só corpo e um só Espírito, como também fuiis chamados em uma só esperança da vossa vocação."
-            <cite className="block mt-2 not-italic">— Efésios 4:4</cite>
-          </blockquote>
+          <AffiliateBox affiliateId="biblia-estudo-almeida-naa" />
+          <AdSlot slotId="home-bottom-editorial" />
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 sm:py-24 bg-gradient-to-br from-[#1a1f3a] via-[#1a1f3a] to-[#0f0f0f] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#D4AF37] rounded-full blur-[100px]" />
-          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-[#D4AF37] rounded-full blur-[80px]" />
-        </div>
-        <div className="container max-w-3xl mx-auto px-4 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
-            <Youtube className="w-4 h-4 text-[#D4AF37]" />
-            <span className="text-white text-sm font-medium">{channelStats.subscribers.toLocaleString('pt-BR')} inscritos</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">Não perca nenhum louvor</h2>
-          <p className="text-white/70 text-base sm:text-lg mb-10 max-w-xl mx-auto">Inscreva-se no canal e ative o sininho para receber notificações sempre que um novo louvor for publicado.</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-[#FF0000] hover:bg-[#CC0000] text-white px-8 py-6 text-lg rounded-full shadow-xl font-bold gap-2 shadow-[#FF0000]/25">
-              <a href="https://www.youtube.com/@gloriaemlouvores?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
-                <Youtube className="w-6 h-6" /> Inscreva-se Agora
-              </a>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-2 border-white/20 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-full gap-2">
-              <a href="https://www.youtube.com/@gloriaemlouvores/videos" target="_blank" rel="noopener noreferrer">
-                Assistir Vídeos
-              </a>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="relative py-10 sm:py-12 overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <img src="/images/footer-jesus.jpg" alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-black/70" />
-        </div>
-        <div className="container max-w-6xl mx-auto px-4 relative z-10">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-            <div>
-              <img src="/images/GL%C3%93RIA_EM_LOUVORES-LOGO.png" alt="Glória em Louvores" className="h-20 object-contain mb-4" />
-              <p className="text-white/60 text-sm">Levando a presença de Deus através da música. Uma família de fé que cresce a cada dia.</p>
-            </div>
-            <div>
-              <h4 className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[2px] mb-4">Canal</h4>
-              <ul className="space-y-2 text-sm text-white/60">
-                <li><a href="https://www.youtube.com/@gloriaemlouvores/videos" target="_blank" className="hover:text-[#D4AF37] transition-colors">Vídeos</a></li>
-                <li><a href="https://www.youtube.com/@gloriaemlouvores/playlists" target="_blank" className="hover:text-[#D4AF37] transition-colors">Playlists</a></li>
-                <li><a href="https://www.youtube.com/@gloriaemlouvores/shorts" target="_blank" className="hover:text-[#D4AF37] transition-colors">Shorts</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[2px] mb-4">Categorias</h4>
-              <ul className="space-y-2 text-sm text-white/60">
-                <li><a href="https://www.youtube.com/@gloriaemlouvores/search?query=adoração" target="_blank" className="hover:text-[#D4AF37] transition-colors">Louvores de Adoração</a></li>
-                <li><a href="https://www.youtube.com/@gloriaemlouvores/search?query=orar" target="_blank" className="hover:text-[#D4AF37] transition-colors">Músicas Para Orar</a></li>
-                <li><a href="https://www.youtube.com/@gloriaemlouvores/search?query=paz" target="_blank" className="hover:text-[#D4AF37] transition-colors">Louvores de Paz</a></li>
-                <li><a href="https://www.youtube.com/@gloriaemlouvores/search?query=dormir" target="_blank" className="hover:text-[#D4AF37] transition-colors">Louvores Para Dormir</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[2px] mb-4">Comunidade</h4>
-              <ul className="space-y-2 text-sm text-white/60">
-                <li><a href="/blog" className="hover:text-[#D4AF37] transition-colors">Blog</a></li>
-                <li><a href="/contato" className="hover:text-[#D4AF37] transition-colors">Pedidos de Oração</a></li>
-                <li><a href="/contato" className="hover:text-[#D4AF37] transition-colors">Contato</a></li>
-                <li><a href="/admin" className="hover:text-[#D4AF37] transition-colors">Admin</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-white/40 text-sm">© 2026 <a href="https://www.youtube.com/@gloriaemlouvores" target="_blank" className="text-[#D4AF37] hover:underline">Glória em Louvores</a>. Todos os direitos reservados.</p>
-            <div className="flex gap-6 text-sm text-white/40">
-              <a href="/privacidade" className="hover:text-[#D4AF37] transition-colors">Política de Privacidade</a>
-              <a href="/termos" className="hover:text-[#D4AF37] transition-colors">Termos de Uso</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

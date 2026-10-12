@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /admin/
 Disallow: /api/
 
 Sitemap: https://gloriaemlouvores.com.br/sitemap.xml

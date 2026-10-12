@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gloriaemlouvores",
+  "compatibility_date": "2026-10-12",
+  "observability": {
+    "enabled": true
+  },
+  "routes": [
+    {
+      "pattern": "gloriaemlouvores.com.br/*",
+      "zone_name": "gloriaemlouvores.com.br"
+    },
+    {
+      "pattern": "www.gloriaemlouvores.com.br/*",
+      "zone_name": "gloriaemlouvores.com.br"
+    }
+  ],
+  "assets": {
+    "directory": "gloria-em-louvores-site/dist/public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "single-page-application"
+  }
+}

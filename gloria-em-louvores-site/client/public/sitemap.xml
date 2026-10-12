@@ -1,33 +1,196 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Portal Principal e Ferramentas Interativas -->
   <url>
     <loc>https://gloriaemlouvores.com.br/</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://gloriaemlouvores.com.br/plano-de-leitura</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/materiais</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/comunidade</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://gloriaemlouvores.com.br/blog</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 8 Hubs de Categoria Temática -->
+  <url>
+    <loc>https://gloriaemlouvores.com.br/devocionais</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/oracoes</loc>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://gloriaemlouvores.com.br/contato</loc>
-    <lastmod>2026-07-22</lastmod>
+    <loc>https://gloriaemlouvores.com.br/estudos-biblicos</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/versiculos</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/familia</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/jovens</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/musica-e-adoracao</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/recursos-para-igrejas</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- 12 Estudos Bíblicos, Devocionais e Guias Originais -->
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/plano-de-leitura-biblica-30-dias-constancia</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/como-criar-rotina-diaria-de-oracao-agenda-corrida</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/estudo-biblico-esperanca-momentos-dificeis-romanos-5-salmo-42</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/versiculos-para-momentos-de-luto-consolo-contexto-biblico</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/como-organizar-culto-domestico-simples-edificante-familia</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/como-preparar-reuniao-de-jovens-dinamica-biblica-acolhedora</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/guia-pratico-de-oracao-para-familias-intercedendo-pelo-lar-e-filhos</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/como-estudar-texto-biblico-metodo-observacao-interpretacao-aplicacao</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/devocional-comecar-a-semana-com-proposito-paz-e-sabedoria</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/recursos-praticos-roteiro-lideres-pequenos-grupos-celulas</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/musica-e-adoracao-igreja-local-preparo-tecnico-espiritual-direitos-autorais</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/blog/como-lidar-com-medo-e-ansiedade-fe-crista-saude-mental</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Páginas Institucionais, Legais e Transparência -->
+  <url>
+    <loc>https://gloriaemlouvores.com.br/sobre</loc>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://gloriaemlouvores.com.br/privacidade</loc>
-    <lastmod>2026-07-22</lastmod>
+    <loc>https://gloriaemlouvores.com.br/contato</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/transparencia-afiliados</loc>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/privacidade</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://gloriaemlouvores.com.br/politica-de-cookies</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
   <url>
     <loc>https://gloriaemlouvores.com.br/termos</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.4</priority>
   </url>
 </urlset>
